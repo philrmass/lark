@@ -1,0 +1,11 @@
+{
+  "name": "lark",
+  "version": "0.0.1",
+  "description": "Mobile music player and server",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "Phil Mass",
+  "license": "MIT"
+}

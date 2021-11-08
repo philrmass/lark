@@ -1,0 +1,11 @@
+{
+  "name": "lark-client",
+  "version": "0.0.1",
+  "description": "Lark music player",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "Phil Mass",
+  "license": "MIT"
+}
