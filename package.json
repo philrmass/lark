@@ -7,5 +7,10 @@
     "test": "jest"
   },
   "author": "Phil Mass",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@koa/router": "^10.1.1",
+    "koa": "^2.13.4",
+    "sonos": "^1.14.1"
+  }
 }
