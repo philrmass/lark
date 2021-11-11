@@ -1,18 +1,40 @@
+const Koa = require('koa');
+const KoaRouter = require('@koa/router');
+
+const port = 4445;
 const nirvanaPath = '/Users/philmass/Music/Library/Nirvana/In Utero/12 All Apologies.mp3';
 
-// app.js
-const Koa = require('koa');
+async function run() {
+  console.log('Starting koa server');
+  const app = new Koa();
 
-// Create Koa app
-const app = new Koa();
+  var router = KoaRouter();
+  router.get('/songs/:guid', getSong);
 
-// Serve requests, here, printing out a simple greeting
-app.use(async ctx => {
-    ctx.body = 'Hello World';
-});
+  console.log(`Adding routes, listening on port ${port}`);
+  app.use(router.routes());
+  app.listen(port);
+}
 
-// Start the server
-app.listen(4445);
+run();
+
+async function getSong(ctx) {
+  const guid = ctx.params.guid;
+  const path = getSongPath(guid);
+
+  console.log('GUID', guid, 'PATH', path);
+
+  ctx.body = 'This is your song';
+};
+
+function getSongPath(guid) {
+  switch (guid) {
+    case 'nirvana':
+      return nirvanaPath;
+  }
+}
+
+
 /*
 router.get('/downloads/:version/:file', async function(ctx) {
   const fileName = `${__dirname}/downloads/${ctx.params.version}/${ctx.params.file}`;
@@ -29,19 +51,10 @@ router.get('/downloads/:version/:file', async function(ctx) {
 });
 */
 
+
 /*
-var koa = require('koa');
-var router = require('koa-router');
-var app = koa();
 
-var _ = router();              //Instantiate the router
-_.get('/hello', getMessage);   // Define routes
 
-function *getMessage() {
-   this.body = "Hello world!";
-};
-
-app.use(_.routes());           //Use the routes defined using the router
 app.listen(3000);
 */
 
