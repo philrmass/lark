@@ -21,11 +21,10 @@ run();
 async function getSong(ctx) {
   const guid = ctx.params.guid;
   const path = getSongPath(guid);
-  console.log(`[guid] = [${path}]`);
+  console.log(`[${guid}] = [${path}]`);
 
   try {
     if (fs.existsSync(path)) {
-      console.log('FILE-EXISTS');
       ctx.body = fs.createReadStream(path);
       ctx.attachment(path);
     } else {
@@ -40,5 +39,7 @@ function getSongPath(guid) {
   switch (guid) {
     case 'nirvana':
       return '/Users/philmass/Music/Library/Nirvana/In Utero/12 All Apologies.mp3';
+    default:
+      return null;
   }
 }

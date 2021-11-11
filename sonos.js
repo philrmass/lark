@@ -2,16 +2,17 @@ const { AsyncDeviceDiscovery, Sonos } = require('sonos')
 
 async function run() {
   //const devices = await getDevices();
-  //const name = 'Kitchen'; //'Basement';
+  //const name = 'Desk'; //'Kitchen'; //'Basement';
   //const addr = devices[name];
   //const addr = '192.168.1.16';
-  const addr = '192.168.1.6';
+  //const addr = '192.168.1.6';
+  const addr = '192.168.1.28';
 
   const device = new Sonos(addr);
   const time = 8000;
   console.log(`Running device at '${addr}`);
 
-  await playSnippet(device, 'alabama', time);
+  //await playSnippet(device, 'alabama', time);
   //await playSnippet(device, 'adele', time);
   //await playSnippet(device, 'bigThief', time);
   //await playSnippet(device, 'dylan', time);
@@ -23,7 +24,12 @@ async function run() {
 run();
 
 async function playSnippet(device, name, time) {
-  await device.play(getUrl(name));
+  const url = getUrl(name);
+  const lurl = getLarkUrl(name);
+  console.log(`URL [${url}]`);
+  console.log(`L-URL [${lurl}]`);
+
+  await device.play(url);
 
   const tr = await device.currentTrack();
   console.log(`Playing ${tr.artist}/${tr.album}/${tr.title}`);
@@ -34,14 +40,19 @@ async function playSnippet(device, name, time) {
   }
 }
 
+function getLarkUrl(name) {
+  const lark= 'http://192.168.1.29:4445/songs/';
+
+  return `${lark}${name}`;
+}
+
 function getUrl(name) {
   const warbler = 'http://192.168.1.29:4444/songs/';
-  //const lark= 'http://192.168.1.29:4445/songs/';
-  const server = warbler;
+  //const warbler = 'localhost:4444/songs/';
   const path = getPath(name);
   
   if (path) {
-    return `${server}${path}`;
+    return `${warbler}${path}`;
   }
 
   const path0 = '/Users/philmass/Music/Library/Adele/21/11 - Someone Like You.mp3';
