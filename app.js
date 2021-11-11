@@ -26,7 +26,7 @@ async function getSong(ctx) {
   try {
     if (fs.existsSync(path)) {
       ctx.body = fs.createReadStream(path);
-      ctx.attachment(path);
+      //ctx.attachment(path);
     } else {
       ctx.throw(400, `Song not found [${guid}]`);
     }
@@ -37,7 +37,7 @@ async function getSong(ctx) {
 
 function getSongPath(guid) {
   switch (guid) {
-    case 'nirvana':
+    case 'nirvana.mp3':
       return '/Users/philmass/Music/Library/Nirvana/In Utero/12 All Apologies.mp3';
     default:
       return null;

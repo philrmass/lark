@@ -4,30 +4,27 @@ async function run() {
   //const devices = await getDevices();
   //const name = 'Desk'; //'Kitchen'; //'Basement';
   //const addr = devices[name];
-  //const addr = '192.168.1.16';
+  const addr = '192.168.1.16';
   //const addr = '192.168.1.6';
-  const addr = '192.168.1.28';
+  //const addr = '192.168.1.28';
 
   const device = new Sonos(addr);
   const time = 8000;
   console.log(`Running device at '${addr}`);
 
-  //await playSnippet(device, 'alabama', time);
+  await playSnippet(device, 'alabama', time);
   //await playSnippet(device, 'adele', time);
   //await playSnippet(device, 'bigThief', time);
   //await playSnippet(device, 'dylan', time);
   //await playSnippet(device, 'helix', time);
-  await playSnippet(device, 'nirvana', time);
+  await playSnippet(device, 'nirvana', time, true);
   //await playSnippet(device, 'radio', time);
 }
 
 run();
 
-async function playSnippet(device, name, time) {
-  const url = getUrl(name);
-  const lurl = getLarkUrl(name);
-  console.log(`URL [${url}]`);
-  console.log(`L-URL [${lurl}]`);
+async function playSnippet(device, name, time, useLark = false) {
+  const url = useLark ? encodeURI(getLarkUrl(name)) : getUrl(name);
 
   await device.play(url);
 
@@ -43,7 +40,7 @@ async function playSnippet(device, name, time) {
 function getLarkUrl(name) {
   const lark= 'http://192.168.1.29:4445/songs/';
 
-  return `${lark}${name}`;
+  return `${lark}${name}.mp3`;
 }
 
 function getUrl(name) {
