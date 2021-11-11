@@ -1,3 +1,18 @@
+const nirvanaPath = '/Users/philmass/Music/Library/Nirvana/In Utero/12 All Apologies.mp3';
+
+// app.js
+const Koa = require('koa');
+
+// Create Koa app
+const app = new Koa();
+
+// Serve requests, here, printing out a simple greeting
+app.use(async ctx => {
+    ctx.body = 'Hello World';
+});
+
+// Start the server
+app.listen(4445);
 /*
 router.get('/downloads/:version/:file', async function(ctx) {
   const fileName = `${__dirname}/downloads/${ctx.params.version}/${ctx.params.file}`;
