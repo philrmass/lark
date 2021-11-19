@@ -1,4 +1,7 @@
 node_modules/
+data/*
 dist/*
 !dist/index.html
 *.swp
+.DS_Store
+_*

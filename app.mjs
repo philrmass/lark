@@ -1,10 +1,22 @@
-const fs = require('fs');
-const Koa = require('koa');
-const KoaRouter = require('@koa/router');
+import fs from 'fs';
+import Koa from 'koa';
+import KoaRouter from '@koa/router';
+
+import config from './config.mjs';
+import { initLibrary } from './utilities/library.mjs';
 
 const port = 4445;
+let songsByGuid = {};
 
 async function run() {
+  const newPaths = [...process.argv].slice(2);
+  songsByGuid = await initLibrary(config, newPaths);
+
+  if (Object.keys(songsByGuid).length === 0) {
+    console.error('No songs found');
+    return;
+  }
+
   console.log('Starting koa server');
   const app = new Koa();
 
@@ -15,8 +27,6 @@ async function run() {
   app.use(router.routes());
   app.listen(port);
 }
-
-run();
 
 async function getSong(ctx) {
   const guid = ctx.params.guid;
@@ -43,3 +53,5 @@ function getSongPath(guid) {
       return null;
   }
 }
+
+run();

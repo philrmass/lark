@@ -4,6 +4,9 @@
   "description": "Mobile music player and server",
   "main": "index.js",
   "scripts": {
+    "build": "cd client && echo '### DO-SOMETHING ###'",
+    "setup": "yarn && cd client && yarn",
+    "start": "node app.mjs",
     "test": "jest"
   },
   "author": "Phil Mass",
