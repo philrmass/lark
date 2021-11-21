@@ -6,8 +6,16 @@ export function isSong(path) {
   return (jsPath.extname(path) === '.mp3');
 }
 
+export function isComplete(song) {
+  if (song) {
+    return true;
+  }
+
+  return false;
+}
+
+export function readPathData(path) {
 /*
-function readSongData(path) {
   let parsed = pth.parse(path);
   const dirs = parsed.dir.split(pth.sep);
   const artist = dirs.length >= 2 ? dirs[dirs.length - 2] : '';
@@ -28,8 +36,12 @@ function readSongData(path) {
     path,
     noMetadata: true,
   };
+  */
+  return {
+  };
 }
 
+/*
 async function readSongMetadata(path) {
   const buffer = await fsp.readFile(path);
   const byteBuffer = new Uint8Array(buffer).buffer;
@@ -87,7 +99,7 @@ function getDate(metadata) {
 }
 
 module.exports.isSong = isSong;
-module.exports.readSongData = readSongData;
+module.exports.readPathData = readPathData;
 module.exports.readSongMetadata = readSongMetadata;
 module.exports.updateSong = updateSong;
 */

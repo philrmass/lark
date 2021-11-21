@@ -11,6 +11,7 @@ let songsByGuid = {};
 async function run() {
   const newPaths = [...process.argv].slice(2);
   songsByGuid = await initLibrary(config, newPaths);
+  //global.artists = parseArtists(songs);
 
   if (Object.keys(songsByGuid).length === 0) {
     console.error('No songs found');
