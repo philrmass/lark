@@ -1,6 +1,7 @@
-//const fsp = require('fs').promises;
-//const md = require('./metadata');
+import { promises as fs } from 'fs';
 import jsPath from 'path';
+
+import { parseMetadata } from './metadata.mjs';
 
 export function isSong(path) {
   return (jsPath.extname(path) === '.mp3');
@@ -8,16 +9,17 @@ export function isSong(path) {
 
 export function isComplete(song) {
   if (song) {
-    return true;
+    return song.artist && 
+      song.album &&
+      song.title;
   }
 
   return false;
 }
 
 export function readPathData(path) {
-/*
-  let parsed = pth.parse(path);
-  const dirs = parsed.dir.split(pth.sep);
+  const parsed = jsPath.parse(path);
+  const dirs = parsed.dir.split(jsPath.sep);
   const artist = dirs.length >= 2 ? dirs[dirs.length - 2] : '';
   const rawAlbum = dirs.length >= 1 ? dirs[dirs.length - 1] : '';
   const album = rawAlbum.replace(/\s+\[Explicit\]/, '');
@@ -33,52 +35,43 @@ export function readPathData(path) {
     title,
     albumIndex,
     songIndex,
-    path,
-    noMetadata: true,
-  };
-  */
-  return {
+    hasMetadata: false,
   };
 }
 
-/*
-async function readSongMetadata(path) {
-  const buffer = await fsp.readFile(path);
+export async function readMetadata(path) {
+  const buffer = await fs.readFile(path);
   const byteBuffer = new Uint8Array(buffer).buffer;
-  return md.readMetadata(byteBuffer);
+  console.log('PM', path);
+  const metadata = parseMetadata(byteBuffer);
+  return interpretMetadata(metadata);
 }
 
-function updateSong(song, metadata) {
-  const path = song.path;
-  const guid = song.guid;
-  const size = song.size;
-  const artist = metadata.TPE2 || metadata.TPE1 || song.artist;
+function interpretMetadata(metadata) {
+  const artist = metadata.TPE2 || metadata.TPE1;
   const album = metadata.TALB || song.album;
   const title = metadata.TIT2 || song.title;
-  const albumIndex = getIndex(metadata.TPOS) || song.albumIndex;
-  const songIndex = getIndex(metadata.TRCK) || song.songIndex;
+  const albumIndex = getIndex(metadata.TPOS);
+  const songIndex = getIndex(metadata.TRCK);
   const date = getDate(metadata);
-  const noMetadata = false;
-  const updated = {
-    path,
-    guid,
-    size,
+  const hasMetadata = true;
+
+  return {
     artist,
     album,
     title,
     albumIndex,
     songIndex,
     date,
-    noMetadata,
+    hasMetadata,
   };
-  return updated;
 }
 
-function getIndex(data) {
-  if (!data) {
+function getIndex(value) {
+  if (!value) {
     return;
   }
-  const indexStr = data.split('/')[0];
+  const indexStr = value.split('/')[0];
   return indexStr && parseInt(indexStr);
 }
 
@@ -97,9 +90,3 @@ function getDate(metadata) {
     return `${metadata.TYER}-xx-xx`;
   }
 }
-
-module.exports.isSong = isSong;
-module.exports.readPathData = readPathData;
-module.exports.readSongMetadata = readSongMetadata;
-module.exports.updateSong = updateSong;
-*/
