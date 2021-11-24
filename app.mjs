@@ -67,7 +67,7 @@ async function getSongs(ctx) {
 }
 
 async function getSong(ctx) {
-  const path = decodeURI(ctx.params.path);
+  const path = decodeURIComponent(ctx.params.path);
   console.log(`[${path}]`);
 
   try {
