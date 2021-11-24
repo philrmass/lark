@@ -23,7 +23,6 @@ async function run() {
 
   artists = parseArtists(songsByGuid);
   console.log(`Parsed ${Object.keys(artists).length} artists in ${toSecs(start, Date.now())} seconds`);
-  console.log('ART', Object.values(artists).map(a => a.name));
 
   console.log('Starting koa server');
   const app = new Koa();
@@ -68,3 +67,56 @@ function getSongPath(guid) {
 }
 
 run();
+
+/*
+var express = require('express');
+const lib = require('../utilities/library.js');
+var router = express.Router();
+
+router.get('/', function(req, res, next) {
+  const artists = global.artists || [];
+  res.send(JSON.stringify(artists));
+});
+
+router.post('/', async function(req, res, next) {
+  const reload = req.body.reloadMetadata;
+  if (reload) {
+    lib.reconcileLibrary(true);
+    res.send(JSON.stringify([]));
+  } else {
+    await lib.reconcileLibrary();
+    const artists = global.artists || [];
+    res.send(JSON.stringify(artists));
+  }
+});
+
+router.get('/:artist', function(req, res, next) {
+  const artist = global.artists && global.artists[req.params.artist] || {};
+  res.send(JSON.stringify(artist));
+});
+
+module.exports = router;
+*/
+
+/*
+var express = require('express');
+var router = express.Router();
+
+router.get('/', function(req, res, next) {
+  const songsByGuid = global.songsByGuid || {};
+  res.send(JSON.stringify(Object.values(songsByGuid)));
+});
+
+router.get('/:path', function(req, res, next) {
+  console.log(` Load '${getSongDescription(req.params.path)}'`);
+  res.download(req.params.path);
+});
+
+function getSongDescription(path) {
+  const parts = path.split('\\');
+  const last = parts.slice(-3);
+  return last.join(':');
+}
+
+module.exports = router;
+*/

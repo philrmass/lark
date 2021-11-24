@@ -15,13 +15,9 @@ export async function initLibrary(config, newPaths, updateAll = false) {
   const oldSongsByGuid = updateAll ? {} : (await loadData(config.songsPath) ?? {});
   const newSongFiles = (await Promise.all(paths.map(path => findSongFiles(path)))).flat();
   const songsByGuid = await updateSongs(oldSongsByGuid, newSongFiles);
-  console.log('SBG', Object.keys(songsByBuid).length);
-  /*
   await saveData(config.songsPath, songsByGuid);
 
   return songsByGuid;
-  */
-  return {};
 }
 
 async function findSongFiles(path) {
@@ -54,6 +50,10 @@ async function updateSongs(oldByGuid, newFiles) {
     const complete = isComplete(existing);
     const pathData = complete ? existing : readPathData(file.path);
     const metadata = complete ? {} : await readMetadata(file.path);
+
+    if (!complete) {
+      console.log(`Imported ${file.path}`);
+    }
 
     return {
       ...byGuid,

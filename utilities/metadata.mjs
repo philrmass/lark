@@ -39,11 +39,12 @@ const ignoredLabels = [
   'TSST',
   'TXXX',
   'UFID',
+  'USLT',
   'WOAS',
   'WXXX',
 ];
 
-export function parseMetadata(buffer) {
+export function parseMetadata(buffer, path) { //??? remove path
   const header = readHeader(new DataView(buffer, 0));
   if (!header) {
     return {};
@@ -62,15 +63,15 @@ export function parseMetadata(buffer) {
       frame = { size: 0 };
     }
 
-    index += ((frame && frame.size) ? frame.size : 0);
-    if ((frame.size === 0) || (index >= end)) {
-      isDone = true;
-    }
-
     if (keptLabels.includes(frame.label)) {
       data[frame.label] = frame.value;
     } else if (!ignoredLabels.includes(frame.label) && (frame.size > 0)) {
-      throw new Error(`Unknown label: > ${index} (${frame.size}) ${frame.label} = ${frame.value.slice(0, 200)}`);
+      console.error(`Unknown label: [${frame.label}] = [${frame.value.slice(0, 50)}] at ${index}, size=${frame.size} end=${end}`);
+    }
+
+    index += ((frame && frame.size) ? frame.size : 0);
+    if ((frame.size === 0) || ((index + frame.size) >= end)) {
+      isDone = true;
     }
   }
 

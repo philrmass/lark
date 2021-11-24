@@ -42,15 +42,15 @@ export function readPathData(path) {
 export async function readMetadata(path) {
   const buffer = await fs.readFile(path);
   const byteBuffer = new Uint8Array(buffer).buffer;
-  console.log('PM', path);
-  const metadata = parseMetadata(byteBuffer);
+  //console.log('PM', path);
+  const metadata = parseMetadata(byteBuffer, path);
   return interpretMetadata(metadata);
 }
 
 function interpretMetadata(metadata) {
   const artist = metadata.TPE2 || metadata.TPE1;
-  const album = metadata.TALB || song.album;
-  const title = metadata.TIT2 || song.title;
+  const album = metadata.TALB;
+  const title = metadata.TIT2;
   const albumIndex = getIndex(metadata.TPOS);
   const songIndex = getIndex(metadata.TRCK);
   const date = getDate(metadata);
