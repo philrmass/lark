@@ -1,0 +1,8 @@
+:root {
+  --fontRegular: 'OpenSans-Regular', 'Helvetica', serif;
+}
+
+@font-face {
+  font-family: 'OpenSans-Regular';
+  src: url('../assets/OpenSans-Regular.ttf') format('truetype');
+}

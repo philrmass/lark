@@ -1,0 +1,13 @@
+@import './fonts.css';
+@import './reset.css';
+
+:root {
+  --size0: 4px;
+  --size1: 8px;
+  --size2: 16px;
+  --background: #989898;
+}
+
+body {
+  font-family: var(--fontRegular);
+}
