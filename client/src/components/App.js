@@ -1,11 +1,7 @@
-import React from 'react';
+import styles from './App.module.css';
 
-function App() {
+export default function App() {
   return (
-    <div>
-      APP
-    </div>
+    <div className={styles.app}>APP</div>
   );
 }
-
-export default App;

@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 const ESLintPlugin = require('eslint-webpack-plugin');
 
 module.exports = {
@@ -38,7 +39,10 @@ module.exports = {
     publicPath: '/',
     filename: 'bundle.js',
   },
-  plugins: [new ESLintPlugin()],
+  plugins: [
+    new ESLintPlugin(),
+    new webpack.ProvidePlugin({ 'React': 'react' }),
+  ],
   devServer: {
     static: {
       directory: path.join(__dirname, 'dist'),
