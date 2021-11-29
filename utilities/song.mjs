@@ -42,8 +42,7 @@ export function readPathData(path) {
 export async function readMetadata(path) {
   const buffer = await fs.readFile(path);
   const byteBuffer = new Uint8Array(buffer).buffer;
-  //console.log('PM', path);
-  const metadata = parseMetadata(byteBuffer, path);
+  const metadata = parseMetadata(byteBuffer);
   return interpretMetadata(metadata);
 }
 

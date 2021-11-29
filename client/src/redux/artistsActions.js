@@ -4,6 +4,6 @@ export function getArtists() {
   return { type: GET_ARTISTS };
 }
 
-export function setArtists(artists) {
-  return { type: SET_ARTISTS, artists };
+export function setArtists(all) {
+  return { type: SET_ARTISTS, all };
 }

@@ -44,7 +44,7 @@ const ignoredLabels = [
   'WXXX',
 ];
 
-export function parseMetadata(buffer, path) { //??? remove path
+export function parseMetadata(buffer) {
   const header = readHeader(new DataView(buffer, 0));
   if (!header) {
     return {};

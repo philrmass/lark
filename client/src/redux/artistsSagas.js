@@ -5,20 +5,12 @@ import { setArtists } from './artistsActions';
 
 function* getArtistsSaga() {
   try {
-    yield console.warn('getArtists');
-    /*
-    const url = 'https://api.weather.gov/points/43.615,-84.247';
+    const isDev = true;
+    const address = isDev ? 'http://192.168.1.29:4445' : '';
+
+    const url = `${address}/artists`;
     const response = yield fetch(url);
-    const json = yield response.json();
-
-    const forecastUrl = json?.properties?.forecast;
-    const forecastResponse = yield fetch(forecastUrl);
-    const forecastJson = yield forecastResponse.json();
-
-    const period = forecastJson?.properties?.periods[0];
-    const forecast = period?.detailedForecast;
-    */
-    const artists = [];
+    const artists = yield response.json() ?? [];
 
     yield put(setArtists(artists));
   } catch (err) {

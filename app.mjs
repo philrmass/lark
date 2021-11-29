@@ -1,6 +1,7 @@
 import fs from 'fs';
 import Koa from 'koa';
 import KoaRouter from '@koa/router';
+import cors from '@koa/cors';
 
 import config from './config.mjs';
 import { initLibrary, parseArtists } from './utilities/library.mjs';
@@ -26,6 +27,7 @@ async function run() {
 
   console.log('Starting koa server');
   const app = new Koa();
+  app.use(cors());
 
   var router = KoaRouter();
   router.get('/songs', getSongs);
