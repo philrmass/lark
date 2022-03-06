@@ -94,3 +94,50 @@ async function getArtists(ctx) {
 }
 
 run();
+/*
+import koa from 'koa';
+import koaRouter from '@koa/router';
+import bodyParser from 'koa-body';
+import cors from '@koa/cors';
+import serve from 'koa-static';
+
+import { times } from './data.mjs';
+
+async function getTimes(ctx) {
+  try {
+    ctx.body = JSON.stringify(times);
+    ctx.response.set('content-type', 'application/json');
+  } catch (err) {
+    ctx.throw(500, err);
+  }
+}
+
+async function validateTime(ctx) {
+  try {
+    console.log('validateTime data=', ctx.request.body);
+    const time = times[0].start_time;
+
+    ctx.body = JSON.stringify(time);
+    ctx.response.set('content-type', 'application/json');
+  } catch (err) {
+    ctx.throw(500, err);
+  }
+}
+
+async function run() {
+  const app = new koa();
+  const router = koaRouter();
+
+  router.get('/astronaut/time_slots', getTimes);
+  router.post('/astronaut/space_walks', bodyParser(), validateTime);
+  console.log('ADDED-ROUTES');
+
+  app.use(cors());
+  app.use(serve('client/dist'));
+  app.use(router.routes());
+
+  app.listen(5555);
+}
+
+run();
+*/
