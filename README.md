@@ -1,5 +1,10 @@
 # Lark
+
 By Phil Mass
+
+### Description
+
+A PwA music player built with React and Koa
 
 ### Installation
 

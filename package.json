@@ -4,7 +4,7 @@
   "description": "Mobile music player and server",
   "main": "index.js",
   "scripts": {
-    "build": "cd client && echo '### DO-SOMETHING ###'",
+    "build": "cd client && yarn build",
     "setup": "yarn && cd client && yarn",
     "start": "node app.mjs",
     "test": "jest"
@@ -15,6 +15,7 @@
     "@koa/cors": "^3.1.0",
     "@koa/router": "^10.1.1",
     "koa": "^2.13.4",
+    "koa-static": "^5.0.0",
     "sonos": "^1.14.1"
   }
 }
