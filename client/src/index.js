@@ -1,11 +1,16 @@
-import { useEffect, useState } from 'react';
-import './style';
+import { useEffect, useState } from 'preact/hooks';
+import Router from 'preact-router';
+import Entry from './components/Entry';
+import Home from './components/Home';
+import NotFound from './components/NotFound';
+import './index.css';
 
 export default function App() {
   const isDev = true;
   const host = isDev ? 'http://0.0.0.0:4445' : '';
   const path = '/artists';
   const [artists, setArtists] = useState([]);
+  const [entries, setEntries] = useState({});
 
   useEffect(() => {
     const getArtists = async (host, path) => {
@@ -29,10 +34,10 @@ export default function App() {
   }, []);
 
   return (
-    <div>
-      <h1>Hello, World!</h1>
-      <div>yo</div>
-      <div>{JSON.stringify(artists, null, 2)}</div>
-    </div>
+    <Router>
+      <Home path='/' artists={artists} />
+      <Entry path='/entries/:guid' entries={entries} />
+      <NotFound default />
+    </Router>
   );
 }
