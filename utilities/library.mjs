@@ -82,7 +82,12 @@ export function parseArtists(songsByGuid) {
   const artists = artistsSongs.map((artist) => {
     const albumsObj = artist.songs.reduce((albums, song) => {
       if (!albums[song.album]) {
-        albums[song.album] = { artist: artist.name, title: song.album, songs: [] };
+        albums[song.album] = {
+          artist: artist.name,
+          title: song.album,
+          guid: calcGuid(`${artist.name}/${song.album}`),
+          songs: []
+        };
       }
       albums[song.album].songs.push(song);
       if (song.date) {
@@ -105,6 +110,7 @@ export function parseArtists(songsByGuid) {
     return {
       name: artist.name,
       albums,
+      guid: calcGuid(artist.name),
     };
   });
 

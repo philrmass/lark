@@ -3,6 +3,7 @@ import Router from 'preact-router';
 import Entry from './components/Entry';
 import Home from './components/Home';
 import NotFound from './components/NotFound';
+import './reset.css';
 import './index.css';
 
 export default function App() {
