@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "cd client && yarn build",
+    "dev": "cd client && yarn dev",
     "setup": "yarn && cd client && yarn",
     "start": "node app.mjs",
     "test": "jest"
