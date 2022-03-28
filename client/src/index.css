@@ -5,3 +5,13 @@
 html, body {
   font: 14px/1.21 'Helvetica Neue', arial, sans-serif;
 }
+
+h1 {
+  font-size: 1.8em;
+}
+
+.back {
+  margin-bottom: 16px;
+  font-size: 1.4em;
+  color: #808080;
+}

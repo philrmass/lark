@@ -1,0 +1,12 @@
+.json {
+  padding: 8px;
+  white-space: pre;
+  font-size: 0.8em;
+  color: #808080;
+}
+
+.album {
+  margin-left: 16px;
+  margin-top: 8px;
+  color: #484848;
+}

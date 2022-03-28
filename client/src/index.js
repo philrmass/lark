@@ -24,6 +24,7 @@ export default function App() {
 
         if (data) {
           setArtists(data);
+          setEntries(parseEntries(data));
           console.log('ARTISTS:', data.map(a => a.name));
         }
       } catch (err) {
@@ -42,3 +43,31 @@ export default function App() {
     </Router>
   );
 }
+
+function parseEntries(artists) {
+  const all = artists.reduce((all, artist) => {
+    const artistEntry = {
+      type: 'artist',
+      name: artist.name,
+      albums: artist.albums.map(album => album.guid),
+    };
+
+    return {
+      ...all,
+      [artist.guid]: artistEntry,
+    };
+  }, {});
+
+  return all;
+}
+
+function parseArtistEntries(artists) {
+}
+
+/*
+function parseAlbumEntries(albums) {
+}
+
+function parseSongsEntries(songs) {
+}
+*/
