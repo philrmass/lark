@@ -6,7 +6,7 @@ export default function Home({ artists }) {
     return (
       <Link href={`/entries/${artist.guid}`}>
         <div className={styles.artist}>
-          {`${artist.name} [${artist.guid}]`}
+          {`${artist.name} (${artist.guid.slice(0, 4)})`}
         </div>
       </Link>
     );

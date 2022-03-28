@@ -1,4 +1,5 @@
 import { promises as fs } from 'fs';
+import * as musicMetadata from 'music-metadata';
 import jsPath from 'path';
 
 import { loadData, saveData } from './file.mjs';
@@ -50,6 +51,7 @@ async function updateSongs(oldByGuid, newFiles) {
     const complete = isComplete(existing);
     const pathData = complete ? existing : readPathData(file.path);
     const metadata = complete ? {} : await readMetadata(file.path);
+    const data = await musicMetadata.parseFile(file.path);
 
     if (!complete) {
       console.log(`Imported ${file.path}`);
@@ -61,6 +63,8 @@ async function updateSongs(oldByGuid, newFiles) {
         ...file,
         ...pathData,
         ...metadata,
+        bitrate: data.format.bitrate,
+        duration: data.format.duration,
       },
     };
   }, {});
