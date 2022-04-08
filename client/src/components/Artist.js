@@ -6,18 +6,19 @@ export default function Artist({ entry, entries }) {
     const album = entries[guid];
 
     return (
-      <div className={styles.album}>
-        {guid}
-        <div className={styles.json}>${JSON.stringify(album, null, 2)}$</div>
-      </div>
+      <Link href={`/entries/${guid}`}>
+        <div className={styles.album}>
+          {`${album.title} (${guid.slice(0, 4)})`}
+        </div>
+      </Link>
     );
   }
 
   return (
     <div>
-      <Link href="/" className='back'>{`< Back`}</Link>
+      <Link href="/" className='back'>{`< Home`}</Link>
       <h1>{entry.name}</h1>
-      {entry.albums.map(album => buildAlbum(album))}
+      {entry.albumGuids.map(guid => buildAlbum(guid))}
       <div>ENTRY:</div>
       <div className={styles.json}>{JSON.stringify(entry, null, 2)}</div>
       <div>ENTRIES:</div>

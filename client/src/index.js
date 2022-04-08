@@ -24,7 +24,7 @@ export default function App() {
 
         if (data) {
           setArtists(data);
-          setEntries(parseEntries(data));
+          setEntries(parseArtistEntries(data));
           console.log('ARTISTS:', data.map(a => a.name));
         }
       } catch (err) {
@@ -44,30 +44,62 @@ export default function App() {
   );
 }
 
-function parseEntries(artists) {
-  const all = artists.reduce((all, artist) => {
+function parseArtistEntries(artists) {
+  return artists.reduce((all, artist) => {
     const artistEntry = {
       type: 'artist',
       name: artist.name,
-      albums: artist.albums.map(album => album.guid),
+      albumGuids: artist.albums.map(album => album.guid),
     };
+    const albumEntries = parseAlbumEntries(artist.albums, artist);
 
     return {
       ...all,
       [artist.guid]: artistEntry,
+      ...albumEntries,
     };
   }, {});
-
-  return all;
 }
 
-function parseArtistEntries(artists) {
+function parseAlbumEntries(albums, artist) {
+  return albums.reduce((all, album) => {
+    const albumEntry = {
+      artist: artist.name,
+      artistGuid: artist.guid,
+      type: 'album',
+      title: album.title,
+      songGuids: album.songs.map(song => song.guid),
+    };
+    const songEntries = parseSongEntries(album.songs, album, artist);
+
+    return {
+      ...all,
+      [album.guid]: albumEntry,
+      ...songEntries,
+    };
+  }, {});
 }
 
-/*
-function parseAlbumEntries(albums) {
-}
+function parseSongEntries(songs, album, artist) {
+  return songs.reduce((all, song) => {
+    const songEntry = {
+      artist: artist.name,
+      artistGuid: artist.guid,
+      album: album.title,
+      albumGuid: album.guid,
+      bitrate: song.bitrate,
+      duration: song.duration,
+      guid: song.guid,
+      path: song.path,
+      size: song.size,
+      songIndex: song.songIndex,
+      title: song.title,
+      type: 'song',
+    };
 
-function parseSongsEntries(songs) {
+    return {
+      ...all,
+      [song.guid]: songEntry,
+    };
+  }, {});
 }
-*/
