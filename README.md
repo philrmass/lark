@@ -26,4 +26,5 @@ yarn dev
 ```
 ### Notes
 - remove album.artist, song.album, song.artist
+- add Breadcrumbs
 

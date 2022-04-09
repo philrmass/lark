@@ -1,7 +1,8 @@
 const { AsyncDeviceDiscovery, Sonos } = require('sonos')
 
 async function run() {
-  //const devices = await getDevices();
+  const devices = await getDevices();
+  console.log('DEVS', devices);
   //const name = 'Desk'; //'Kitchen'; //'Basement';
   //const addr = devices[name];
   const addr = '192.168.1.16';
@@ -12,12 +13,12 @@ async function run() {
   const time = 8000;
   console.log(`Running device at '${addr}`);
 
-  await playSnippet(device, 'alabama', time);
+  //await playSnippet(device, 'alabama', time);
   //await playSnippet(device, 'adele', time);
   //await playSnippet(device, 'bigThief', time);
   //await playSnippet(device, 'dylan', time);
   //await playSnippet(device, 'helix', time);
-  await playSnippet(device, 'nirvana', time, true);
+  //await playSnippet(device, 'nirvana', time, true);
   //await playSnippet(device, 'radio', time);
 }
 
@@ -88,8 +89,10 @@ function getPath(name) {
 async function getDevices() {
   const add = new AsyncDeviceDiscovery();
   const devices = await add.discoverMultiple();
+  console.log('devs', devices);
   const descriptions = await Promise.all(devices.map(device => device.deviceDescription()));
 
+  console.log('descs', descriptions);
   return devices.reduce((all, device, index) => {
     const name = descriptions[index]?.roomName; 
 

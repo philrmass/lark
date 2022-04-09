@@ -4,3 +4,29 @@
   font-size: 0.8em;
   color: #808080;
 }
+
+.song {
+  margin: 16px;
+}
+
+.buttons {
+  padding: 8px 0;
+}
+
+.detailsSection {
+  display: inline-block;
+  margin-top: 8px;
+  border: 1px solid #d0d0d0;
+  background: #f8f8f8;
+}
+
+.details {
+  padding: 4px;
+  color: #585858;
+  display: grid;
+  grid-template-columns: auto auto;
+}
+
+.details > * {
+  padding: 2px 4px;
+}
