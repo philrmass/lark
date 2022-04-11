@@ -10,6 +10,25 @@ export async function getDevices(ctx) {
   }
 }
 
+export async function postAction(ctx) {
+  try {
+    const data = ctx.request.body;
+    console.log('GOT-DATA', data);
+
+    if (data.action === 'play') {
+      const host = 'http://192.168.1.29:4445';
+      const url = `${host}/songs/${data.path}`;
+      await playUrl(url, data.ipAddress);
+    }
+
+    const d = { msg: 'hello' };
+    ctx.body = JSON.stringify(d);
+    ctx.response.set('content-type', 'application/json');
+  } catch (err) {
+    ctx.throw(500, err);
+  }
+}
+
 async function run() {
   const host = 'http://192.168.1.29:4445';
   const address = '192.168.1.17';
@@ -28,7 +47,7 @@ async function run() {
   await playUrl(url, address);
 }
 
-run();
+//run();
 
 async function playUrl(url, address) {
   console.log(`Playing [${url}] at [${address}]`);
@@ -38,9 +57,9 @@ async function playUrl(url, address) {
   const tr = await device.currentTrack();
   console.log(`Playing ${tr.artist}/${tr.album}/${tr.title}`);
 
-  const time = 5000;
-  await new Promise(r => setTimeout(r, time));
-  await device.pause();
+  //const time = 5000;
+  //await new Promise(r => setTimeout(r, time));
+  //await device.pause();
 }
 
 //??? update devices by id with more info

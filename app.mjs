@@ -3,11 +3,10 @@ import koa from 'koa';
 import koaRouter from '@koa/router';
 import cors from '@koa/cors';
 import serve from 'koa-static';
-//import bodyParser from 'koa-body';
-//"koa-body": "^4.2.0",
+import koaBody from 'koa-body';
 
 import config from './config.mjs';
-import { getDevices } from './routes/sonos.mjs';
+import { getDevices, postAction } from './routes/sonos.mjs';
 import { initLibrary, parseArtists } from './utilities/library.mjs';
 
 const port = 4445;
@@ -35,11 +34,11 @@ async function run() {
   app.use(serve('client/build'));
 
   const router = koaRouter();
-  //router.get('/songs', getSongs);
+  //router.get('/songs', getEntries);
   router.get('/songs/:path', getSong);
   router.get('/artists', getArtists);
   router.get('/sonos', getDevices);
-  //router.post('/astronaut/space_walks', bodyParser(), validateTime);
+  router.post('/sonos', koaBody(), postAction);
 
   app.use(router.routes());
   app.listen(port);
@@ -51,24 +50,10 @@ function toSecs(start, end) {
   return secs.toFixed(3);
 }
 
-//??? reload
+// ??? parse entries from artists and return
+// ??? simplify artists data
 /*
-router.post('/', async function(req, res, next) {
-  const reload = req.body.reloadMetadata;
-  if (reload) {
-    lib.reconcileLibrary(true);
-    res.send(JSON.stringify([]));
-  } else {
-    await lib.reconcileLibrary();
-    const artists = global.artists || [];
-    res.send(JSON.stringify(artists));
-  }
-});
-*/
-
-/*
-// ??? add back as getEntries
-async function getSongs(ctx) {
+async function getEntries(ctx) {
   try {
     ctx.body = JSON.stringify(songsByGuid);
     ctx.response.set('content-type', 'application/json');
