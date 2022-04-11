@@ -16,7 +16,7 @@ export default function Artist({ entry, entries }) {
 
   return (
     <div>
-      <Link href="/" className='back'>{`< Home`}</Link>
+      <Link href='/' className='back'>{'< Home'}</Link>
       <h1>{entry.name}</h1>
       {entry.albumGuids.map(guid => buildAlbum(guid))}
       <div>ENTRY:</div>

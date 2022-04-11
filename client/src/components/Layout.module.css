@@ -1,0 +1,7 @@
+.player {
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #e8e8e8;
+}

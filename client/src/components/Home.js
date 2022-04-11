@@ -15,7 +15,6 @@ export default function Home({ artists }) {
   return (
     <div>
       {artists.map(artist => buildArtist(artist))}
-      <div className={styles.json}>{JSON.stringify(artists, null, 2)}</div>
     </div>
   );
 }

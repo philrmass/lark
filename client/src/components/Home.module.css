@@ -9,10 +9,3 @@
   border-left: var(--border);
   border-right: var(--border);
 }
-
-.json {
-  padding: 8px;
-  white-space: pre;
-  font-size: 0.8em;
-  color: #808080;
-}

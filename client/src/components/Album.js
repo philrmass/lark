@@ -15,11 +15,10 @@ export default function Album({ entry, entries }) {
   }
 
   return (
-    <div>
-      <Link href="/" className='back'>{`< Home`}</Link>
+    <div className={styles.album}>
+      <Link href="/" className='back'>{'< Home'}</Link>
       <h1>{entry.title}</h1>
       {entry.songGuids.map(guid => buildSong(guid))}
-      <div className={styles.json}>{JSON.stringify(entry, null, 2)}</div>
     </div>
   );
 }

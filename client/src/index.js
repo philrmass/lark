@@ -1,22 +1,22 @@
 import { useEffect, useState } from 'preact/hooks';
-import Router from 'preact-router';
-import Entry from './components/Entry';
-import Home from './components/Home';
-import NotFound from './components/NotFound';
+import { parseArtistEntries } from './utilities/data';
+
+import Layout from './components/Layout';
 import './reset.css';
 import './index.css';
 
 export default function App() {
   const isDev = true;
   const host = isDev ? 'http://0.0.0.0:4445' : '';
-  const path = '/artists';
   const [artists, setArtists] = useState([]);
   const [entries, setEntries] = useState({});
+  const [songUrl, setSongUrl] = useState('');
+  const [useSonos, setUseSonos] = useState(false);
 
   useEffect(() => {
+    const artistsPath = '/artists';
     const getArtists = async (host, path) => {
       try {
-        const isDev = true;
         const url = `${host}${path}`;
 
         const response = await fetch(url);
@@ -25,81 +25,46 @@ export default function App() {
         if (data) {
           setArtists(data);
           setEntries(parseArtistEntries(data));
-          console.log('ARTISTS:', data.map(a => a.name));
         }
       } catch (err) {
         console.error('Error getting artists', err);
       }
     };
 
-    getArtists(host, path);
-  }, []);
+    getArtists(host, artistsPath);
+  }, [host]);
+
+  async function execute(cmd) {
+    //??? console.log('CMD', cmd);
+
+    if (cmd.type === 'play') {
+      if (useSonos) {
+        console.log('SONOS');
+      } else {
+        try {
+          const encodedPath = encodeURIComponent(cmd.path);
+          const response = await fetch(`${host}/songs/${encodedPath}`);
+          const blob = await response.blob();
+          const url = URL.createObjectURL(blob);
+
+          setSongUrl(url);
+        } catch (err) {
+          console.error(`Error fetching song (${cmd.path}):`, err);
+        }
+      }
+    }
+  }
 
   return (
-    <Router>
-      <Home path='/' artists={artists} />
-      <Entry path='/entries/:guid' entries={entries} />
-      <NotFound default />
-    </Router>
+    <div>
+      <Layout
+        artists={artists}
+        entries={entries}
+        songUrl={songUrl}
+        useSonos={useSonos}
+        execute={execute}
+        setUseSonos={setUseSonos}
+      />
+    </div>
   );
-}
-
-function parseArtistEntries(artists) {
-  return artists.reduce((all, artist) => {
-    const artistEntry = {
-      type: 'artist',
-      name: artist.name,
-      albumGuids: artist.albums.map(album => album.guid),
-    };
-    const albumEntries = parseAlbumEntries(artist.albums, artist);
-
-    return {
-      ...all,
-      [artist.guid]: artistEntry,
-      ...albumEntries,
-    };
-  }, {});
-}
-
-function parseAlbumEntries(albums, artist) {
-  return albums.reduce((all, album) => {
-    const albumEntry = {
-      artist: artist.name,
-      artistGuid: artist.guid,
-      type: 'album',
-      title: album.title,
-      songGuids: album.songs.map(song => song.guid),
-    };
-    const songEntries = parseSongEntries(album.songs, album, artist);
-
-    return {
-      ...all,
-      [album.guid]: albumEntry,
-      ...songEntries,
-    };
-  }, {});
-}
-
-function parseSongEntries(songs, album, artist) {
-  return songs.reduce((all, song) => {
-    const songEntry = {
-      artist: artist.name,
-      artistGuid: artist.guid,
-      album: album.title,
-      albumGuid: album.guid,
-      bitrate: song.bitrate,
-      duration: song.duration,
-      guid: song.guid,
-      path: song.path,
-      size: song.size,
-      songIndex: song.songIndex,
-      title: song.title,
-      type: 'song',
-    };
-
-    return {
-      ...all,
-      [song.guid]: songEntry,
-    };
-  }, {});
 }
