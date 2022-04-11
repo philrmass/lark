@@ -6,6 +6,7 @@
   "scripts": {
     "build": "cd client && yarn build",
     "dev": "cd client && yarn dev",
+    "lint": "eslint",
     "setup": "yarn && cd client && yarn",
     "start": "node app.mjs",
     "test": "jest"
@@ -15,6 +16,7 @@
   "dependencies": {
     "@koa/cors": "^3.1.0",
     "@koa/router": "^10.1.1",
+    "eslint": "^8.13.0",
     "koa": "^2.13.4",
     "koa-static": "^5.0.0",
     "music-metadata": "^7.12.2",

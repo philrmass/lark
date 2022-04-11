@@ -7,6 +7,7 @@ import serve from 'koa-static';
 //"koa-body": "^4.2.0",
 
 import config from './config.mjs';
+import { getDevices } from './routes/sonos.mjs';
 import { initLibrary, parseArtists } from './utilities/library.mjs';
 
 const port = 4445;
@@ -34,9 +35,10 @@ async function run() {
   app.use(serve('client/build'));
 
   const router = koaRouter();
-  router.get('/songs', getSongs);
+  //router.get('/songs', getSongs);
   router.get('/songs/:path', getSong);
   router.get('/artists', getArtists);
+  router.get('/sonos', getDevices);
   //router.post('/astronaut/space_walks', bodyParser(), validateTime);
 
   app.use(router.routes());
@@ -64,6 +66,8 @@ router.post('/', async function(req, res, next) {
 });
 */
 
+/*
+// ??? add back as getEntries
 async function getSongs(ctx) {
   try {
     ctx.body = JSON.stringify(songsByGuid);
@@ -72,6 +76,7 @@ async function getSongs(ctx) {
     ctx.throw(500, err);
   }
 }
+*/
 
 async function getSong(ctx) {
   const path = decodeURIComponent(ctx.params.path);

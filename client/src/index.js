@@ -11,11 +11,11 @@ export default function App() {
   const [artists, setArtists] = useState([]);
   const [entries, setEntries] = useState({});
   const [songUrl, setSongUrl] = useState('');
+  const [devices, setDevices] = useState({});
   const [useSonos, setUseSonos] = useState(false);
 
   useEffect(() => {
-    const artistsPath = '/artists';
-    const getArtists = async (host, path) => {
+    const get = async (host, path, callback) => {
       try {
         const url = `${host}${path}`;
 
@@ -23,23 +23,43 @@ export default function App() {
         const data = await response.json() ?? [];
 
         if (data) {
-          setArtists(data);
-          setEntries(parseArtistEntries(data));
+          callback(data);
         }
       } catch (err) {
-        console.error('Error getting artists', err);
+        console.error(`Error getting ${path}`, err);
       }
     };
 
-    getArtists(host, artistsPath);
+    const gotArtists = (data) => {
+      setArtists(data);
+      setEntries(parseArtistEntries(data));
+    };
+
+    get(host, '/artists', gotArtists);
+    get(host, '/sonos', setDevices);
   }, [host]);
 
   async function execute(cmd) {
     //??? console.log('CMD', cmd);
+    console.log('DEV', devices);
 
     if (cmd.type === 'play') {
       if (useSonos) {
-        console.log('SONOS');
+        const encodedPath = encodeURIComponent(cmd.path);
+        const data = {
+          ipAddress: devices.Kitchen,
+          path: encodedPath,
+          action: 'play',
+        };
+        const params = {
+          method: 'post',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        };
+        await fetch(`${host}/sonos/`, params);
+        console.log('SEND', data, params);
       } else {
         try {
           const encodedPath = encodeURIComponent(cmd.path);
