@@ -1,5 +1,8 @@
 import { AsyncDeviceDiscovery, Sonos } from 'sonos';
 
+//??? add functionality
+//await device.pause();
+
 export async function getDevices(ctx) {
   try {
     const devices = await queryDevices();
@@ -50,16 +53,11 @@ async function run() {
 //run();
 
 async function playUrl(url, address) {
-  console.log(`Playing [${url}] at [${address}]`);
   const device = new Sonos(address);
   await device.play(url);
 
   const tr = await device.currentTrack();
   console.log(`Playing ${tr.artist}/${tr.album}/${tr.title}`);
-
-  //const time = 5000;
-  //await new Promise(r => setTimeout(r, time));
-  //await device.pause();
 }
 
 //??? update devices by id with more info
