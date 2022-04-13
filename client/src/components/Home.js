@@ -5,12 +5,14 @@ import Album from './Album';
 import Artist from './Artist';
 import Artists from './Artists';
 import NotFound from './NotFound';
+import Output from './Output';
 import Player from './Player';
 import Queue from './Queue';
 import Song from './Song';
 
 export default function Home({
   artists,
+  devices,
   entries,
   output,
   song,
@@ -19,11 +21,9 @@ export default function Home({
 }) {
   return (
     <div>
-      <div className={styles.player}>
+      <div className={styles.header}>
         <Player song={song} exec={exec} />
-        <button onClick={() => setOutput(v => v ? null : {})}>
-          {`Sonos ${output ? 'T' : 'F'}`}
-        </button>
+        <Output devices={devices} output={output} setOutput={setOutput} />
       </div>
       <Queue />
       <Router>

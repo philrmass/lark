@@ -1,7 +1,15 @@
+//??? move commands to utilities, exec(cmd, player)
+//??? add sonos utilities, postSonos(data)
 //??? add play/pause to sonos route
+
 //??? save devices in local storage
 //??? add output selection modal
 //??? select device as output, save in local storage
+
+//??? add utilities/actions
+//??? add queue and queueing options
+//??? implement locally and on sonos
+
 //??? add <Breadcrumbs data={song} /> :: Artist, Album, Song, NotFound
 //??? move entries route to server, parse entries on server, remove unneeded data, add new get
 import { useEffect, useRef, useState } from 'preact/hooks';
@@ -77,6 +85,7 @@ export default function App() {
     <>
       <Home
         artists={artists}
+        devices={devices}
         entries={entries}
         output={output}
         song={song}
