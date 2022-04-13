@@ -1,9 +1,16 @@
+//??? add play/pause to sonos route
+//??? save devices in local storage
+//??? add output selection modal
+//??? select device as output, save in local storage
+//??? add <Breadcrumbs data={song} /> :: Artist, Album, Song, NotFound
+//??? move entries route to server, parse entries on server, remove unneeded data, add new get
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { parseArtistEntries } from './utilities/data';
 
-import Layout from './components/Layout';
+import { parseArtistEntries } from './utilities/data';
+import { get } from './utilities/network';
 import './reset.css';
 import './index.css';
+import Home from './components/Home';
 
 export default function App() {
   const isDev = true;
@@ -13,49 +20,19 @@ export default function App() {
   const [entries, setEntries] = useState({});
   const [song, setSong] = useState('');
   const [devices, setDevices] = useState({});
-  const [useSonos, setUseSonos] = useState(false);
+  const [output, setOutput] = useState(false);
 
   useEffect(() => {
-    //??? move to hook
-    const get = async (host, path, callback) => {
-      try {
-        const url = `${host}${path}`;
-
-        const response = await fetch(url);
-        const data = await response.json() ?? [];
-
-        if (data) {
-          callback(data);
-        }
-      } catch (err) {
-        console.error(`Error getting ${path}`, err);
-      }
-    };
-
-    //??? move entries to server
-    const gotArtists = (data) => {
+    get(host, '/artists', (data) => {
       setArtists(data);
       setEntries(parseArtistEntries(data));
-    };
-
-    get(host, '/artists', gotArtists);
+    });
     get(host, '/sonos', setDevices);
   }, [host]);
 
-/*
-  useEffect(() => {
-    if (song !== player.current.src) {
-      player.current.src = song;
-      player.current.play();
-    }
-  }, [song]);
-  */
-
   async function exec(cmd) {
-    console.log('DEV', devices);
-
     if (cmd.type === 'addSong') {
-      if (useSonos) {
+      if (output) {
         const encodedPath = encodeURIComponent(cmd.song.path);
         const data = {
           ipAddress: devices.Kitchen,
@@ -86,10 +63,10 @@ export default function App() {
         }
       }
     } else if (cmd.type === 'togglePlay') {
-      if (useSonos) {
+      if (output) {
         console.warn('TOGGLE PLAY SONOS', cmd);
       } else {
-        console.warn('TOGGLE PLAY LOCAL', cmd);
+        player.current.paused ? player.current.play() : player.current.pause();
       }
     } else {
       console.warn('UNKNOWN CMD', cmd);
@@ -98,14 +75,18 @@ export default function App() {
 
   return (
     <>
-      <Layout
+      <Home
         artists={artists}
         entries={entries}
-        useSonos={useSonos}
+        output={output}
+        song={song}
         exec={exec}
-        setUseSonos={setUseSonos}
+        setOutput={setOutput}
       />
-      <audio ref={player} controls />
+      <div style={{ padding: '32px' }}>
+        <audio ref={player} controls />
+        <div>{Object.keys(devices)}</div>
+      </div>
     </>
   );
 }

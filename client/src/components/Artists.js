@@ -4,7 +4,7 @@ import styles from './Artists.module.css';
 export default function Artists({ artists }) {
   function buildArtist(artist) {
     return (
-      <Link href={`/entries/${artist.guid}`}>
+      <Link href={`/artists/${artist.guid}`}>
         <div className={styles.artist}>
           {`${artist.name} (${artist.guid.slice(0, 4)})`}
         </div>

@@ -1,12 +1,22 @@
-import { Link } from 'preact-router/match';
+import { Link, route } from 'preact-router/match';
 import styles from './Artist.module.css';
 
-export default function Artist({ entry, entries }) {
+export default function Artist({ guid, entries }) {
+  const artist = entries[guid];
+
+  if (!artist) {
+    return <div>Loading...</div>;
+  }
+
+  if (artist?.type !== 'artist') {
+    route('/', true);
+  }
+
   function buildAlbum(guid) {
     const album = entries[guid];
 
     return (
-      <Link href={`/entries/${guid}`}>
+      <Link href={`/albums/${guid}`}>
         <div className={styles.album}>
           {`${album.title} (${guid.slice(0, 4)})`}
         </div>
@@ -17,12 +27,8 @@ export default function Artist({ entry, entries }) {
   return (
     <div>
       <Link href='/' className='back'>{'< Home'}</Link>
-      <h1>{entry.name}</h1>
-      {entry.albumGuids.map(guid => buildAlbum(guid))}
-      <div>ENTRY:</div>
-      <div className={styles.json}>{JSON.stringify(entry, null, 2)}</div>
-      <div>ENTRIES:</div>
-      <div className={styles.json}>{JSON.stringify(entries, null, 2)}</div>
+      <h1>{artist.name}</h1>
+      {artist.albumGuids.map(guid => buildAlbum(guid))}
     </div>
   );
 }

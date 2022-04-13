@@ -1,11 +1,12 @@
 import { Link } from 'preact-router/match';
 
-export default function NotFound({ data }) {
+//??? remove NotFound, redirect to Artists instead
+export default function NotFound({ url }) {
   return (
-    <div>
-      <Link href="/">Back to home</Link>
-      <div>That entry was not found</div>
-      <div className='json'>{JSON.stringify(data, null, 2)}</div>
-    </div>
+    <>
+      <Link href="/">BREADCRUMBS</Link>
+      <h1>The path was not found</h1>
+      <div>{url}</div>
+    </>
   );
 }

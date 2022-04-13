@@ -1,4 +1,3 @@
-import { useEffect, useRef } from 'react';
 import styles from './Player.module.css';
 
 function togglePlay() {
@@ -7,10 +6,11 @@ function togglePlay() {
   };
 }
 
-export default function Player({ exec }) {
+export default function Player({ song, exec }) {
   return (
     <div className={styles.player}>
       <button onClick={() => exec(togglePlay())}>P</button>
+      <div>{song?.title ?? ''}</div>
     </div>
   );
 }
