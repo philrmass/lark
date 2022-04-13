@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
 import { parseArtistEntries } from './utilities/data';
 
 import Layout from './components/Layout';
@@ -8,13 +8,15 @@ import './index.css';
 export default function App() {
   const isDev = true;
   const host = isDev ? 'http://0.0.0.0:4445' : '';
+  const player = useRef(null);
   const [artists, setArtists] = useState([]);
   const [entries, setEntries] = useState({});
-  const [songUrl, setSongUrl] = useState('');
+  const [song, setSong] = useState('');
   const [devices, setDevices] = useState({});
   const [useSonos, setUseSonos] = useState(false);
 
   useEffect(() => {
+    //??? move to hook
     const get = async (host, path, callback) => {
       try {
         const url = `${host}${path}`;
@@ -30,6 +32,7 @@ export default function App() {
       }
     };
 
+    //??? move entries to server
     const gotArtists = (data) => {
       setArtists(data);
       setEntries(parseArtistEntries(data));
@@ -39,13 +42,21 @@ export default function App() {
     get(host, '/sonos', setDevices);
   }, [host]);
 
-  async function execute(cmd) {
-    //??? console.log('CMD', cmd);
+/*
+  useEffect(() => {
+    if (song !== player.current.src) {
+      player.current.src = song;
+      player.current.play();
+    }
+  }, [song]);
+  */
+
+  async function exec(cmd) {
     console.log('DEV', devices);
 
-    if (cmd.type === 'play') {
+    if (cmd.type === 'addSong') {
       if (useSonos) {
-        const encodedPath = encodeURIComponent(cmd.path);
+        const encodedPath = encodeURIComponent(cmd.song.path);
         const data = {
           ipAddress: devices.Kitchen,
           path: encodedPath,
@@ -62,29 +73,39 @@ export default function App() {
         console.log('SEND', data, params);
       } else {
         try {
-          const encodedPath = encodeURIComponent(cmd.path);
+          const encodedPath = encodeURIComponent(cmd.song.path);
           const response = await fetch(`${host}/songs/${encodedPath}`);
           const blob = await response.blob();
           const url = URL.createObjectURL(blob);
 
-          setSongUrl(url);
+          player.current.src = url;
+          player.current.play();
+          setSong({ ...cmd.song, url });
         } catch (err) {
           console.error(`Error fetching song (${cmd.path}):`, err);
         }
       }
+    } else if (cmd.type === 'togglePlay') {
+      if (useSonos) {
+        console.warn('TOGGLE PLAY SONOS', cmd);
+      } else {
+        console.warn('TOGGLE PLAY LOCAL', cmd);
+      }
+    } else {
+      console.warn('UNKNOWN CMD', cmd);
     }
   }
 
   return (
-    <div>
+    <>
       <Layout
         artists={artists}
         entries={entries}
-        songUrl={songUrl}
         useSonos={useSonos}
-        execute={execute}
+        exec={exec}
         setUseSonos={setUseSonos}
       />
-    </div>
+      <audio ref={player} controls />
+    </>
   );
 }

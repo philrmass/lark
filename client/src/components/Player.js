@@ -1,19 +1,16 @@
 import { useEffect, useRef } from 'react';
 import styles from './Player.module.css';
 
-export default function Player({ songUrl }) {
-  const player = useRef(null);
+function togglePlay() {
+  return {
+    type: 'togglePlay',
+  };
+}
 
-  useEffect(() => {
-    if (songUrl !== player.current.src) {
-      player.current.src = songUrl;
-      player.current.play();
-    }
-  }, [songUrl]);
-
+export default function Player({ exec }) {
   return (
     <div className={styles.player}>
-      <audio ref={player} controls />
+      <button onClick={() => exec(togglePlay())}>P</button>
     </div>
   );
 }

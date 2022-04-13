@@ -3,7 +3,15 @@ import { Link } from 'preact-router/match';
 import { toTime, toMb, toKbps } from '../utilities/display';
 import styles from './Song.module.css';
 
-export default function Song({ entry, execute }) {
+function addSong(song) {
+  //??? add queue options
+  return {
+    type: 'addSong',
+    song: { ...song },
+  };
+}
+
+export default function Song({ entry, exec }) {
   const data = [
     ['Artist', entry.artist],
     ['Album', entry.album],
@@ -12,13 +20,6 @@ export default function Song({ entry, execute }) {
     ['Size (MB)', toMb(entry.size)],
     ['Bitrate (kbps)', toKbps(entry.bitrate)],
   ];
-
-  function playSong() {
-    execute({
-      type: 'play',
-      path: entry.path,
-    });
-  }
 
   function buildDetails(data) {
     return (
@@ -40,7 +41,7 @@ export default function Song({ entry, execute }) {
       <Link href="/">Back to home</Link>
       <h1>{entry.title}</h1>
       <div className={styles.buttons}>
-        <button onClick={() => playSong()}>Play</button>
+        <button onClick={() => exec(addSong(entry))}>Play</button>
       </div>
       {buildDetails(data)}
     </div>

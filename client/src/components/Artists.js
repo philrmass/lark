@@ -1,7 +1,7 @@
 import { Link } from 'preact-router/match';
-import styles from './Home.module.css';
+import styles from './Artists.module.css';
 
-export default function Home({ artists }) {
+export default function Artists({ artists }) {
   function buildArtist(artist) {
     return (
       <Link href={`/entries/${artist.guid}`}>
