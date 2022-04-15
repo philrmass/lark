@@ -1,9 +1,19 @@
-//import styles from './Output.module.css';
+import styles from './Output.module.css';
 
 export default function Output({ devices, output, setOutput }) {
+  function pickOutput() {
+    //const name = 'Kitchen';
+    const name = 'Living Room';
+    //const name = 'Desk';
+    const device = output ? null : Object.values(devices).find(d => d.name === name);
+    setOutput(device);
+  }
+
   return (
-    <button onClick={() => setOutput(v => v ? null : {})}>
-      {output ? `Sonos (${Object.keys(devices).length})` : 'Local'}
-    </button>
+    <div className={styles.output}>
+      <button onClick={() => pickOutput()}>
+        {output ? output?.name : 'Local'}
+      </button>
+    </div>
   );
 }

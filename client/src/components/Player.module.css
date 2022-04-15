@@ -2,3 +2,16 @@
   display: flex;
   align-items: center;
 }
+
+.play {
+  width: 4em;
+  height: 4em;
+  margin-right: 4px;
+}
+
+.adjust {
+  width: 3em;
+  height: 2em;
+  display: block;
+  padding: 2px 0;
+}

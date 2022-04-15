@@ -1,7 +1,7 @@
 import { AsyncDeviceDiscovery, Sonos } from 'sonos';
 
-//??? add functionality
-//await device.pause();
+//??? detect ip address of server
+const host = 'http://192.168.1.29:4445';
 
 export async function getDevices(ctx) {
   try {
@@ -16,20 +16,125 @@ export async function getDevices(ctx) {
 export async function postAction(ctx) {
   try {
     const data = ctx.request.body;
-    console.log('GOT-DATA', data);
+    let result = null;
+    let error = null;
 
-    if (data.action === 'play') {
-      const host = 'http://192.168.1.29:4445';
-      const url = `${host}/songs/${data.path}`;
-      await playUrl(url, data.ipAddress);
+    if (data.ipAddress) {
+      const device = new Sonos(data.ipAddress);
+      try {
+        result = await action(data, device);
+      } catch (err) {
+        error = err;
+      }
+
+      const response = { ...result, error };
+      ctx.body = JSON.stringify(response);
+      ctx.response.set('content-type', 'application/json');
     }
-
-    const d = { msg: 'hello' };
-    ctx.body = JSON.stringify(d);
-    ctx.response.set('content-type', 'application/json');
   } catch (err) {
-    ctx.throw(500, err);
+    ctx.throw(500, `postAction error: [${err}]`);
   }
+}
+
+function action(data, device) {
+  switch (data.action) {
+    case 'adjustVolume':
+      return adjustVolume(device, data.inc);
+    case 'clear':
+      return clear(device);
+    case 'queueSong':
+      return queueSong(device, data.path);
+    case 'setVolume':
+      return setVolume(device, data.value);
+    case 'togglePlay':
+      return togglePlay(device);
+  }
+}
+
+async function adjustVolume(device, inc) {
+  await device.adjustVolume(inc);
+  const volume = await device.getVolume();
+
+  console.log('VOLUME', volume);
+  return { volume };
+}
+
+async function clear(device) {
+  await device.flush();
+
+  const queue = await device.getQueue();
+  console.log(`QUEUE(${queue.items.length}) `, queue.items.map(i => i.title));
+}
+
+async function queueSong(device, path) {
+  const url = `${host}/songs/${path}`;
+  await device.play(url);
+
+  const queue = await device.getQueue();
+  console.log(`QUEUE(${queue.items.length}) `, queue.items.map(i => i.title));
+}
+
+async function setVolume(device, value) {
+  await device.setVolume(value);
+  const volume = await device.getVolume();
+
+  console.log('VOLUME', volume);
+  return { volume };
+}
+
+async function togglePlay(device) {
+  await device.togglePlayback();
+
+  const current = await device.currentTrack();
+  console.log('CURRENT ', [current.artist, current.album, current.title]);
+}
+
+//??? actions
+//queue(uri, positionInQueue);
+//queueNext(uri);
+//seek(seconds);
+//leaveGroup()
+//next()
+//previous()
+//joinGroup(otherDeviceName)
+//selectTrack(index) [from index 1]
+
+export async function getInfo(device) {
+  const queue = await device.getQueue();
+  const groups = await device.getAllGroups();
+  const current = await device.currentTrack();
+  const volume = await device.getVolume();
+
+  console.log('\nINFO');
+  console.log(' QUEUE ', queue.items.map(i => i.title));
+  console.log(' GROUPS ', groups.map(g => g.Name));
+  console.log(' CURRENT ', [current.artist, current.album, current.title]);
+  console.log(' VOLUME ', volume);
+}
+
+async function queryDevices() {
+  const discovery = new AsyncDeviceDiscovery();
+  const devices = await discovery.discoverMultiple();
+  const descriptions = await Promise.all(devices.map(device => device.deviceDescription()));
+
+  return devices.reduce((all, device, index) => {
+    const desc = descriptions[index] ?? {};
+
+    const id = desc.serialNum; 
+    const ipAddress = device.host;
+    const model = `${desc.modelName}::${desc.modelNumber}`;
+    const name = desc.roomName; 
+
+    return {
+      ...all,
+      [id]: {
+        id,
+        ipAddress,
+        model,
+        name,
+      },
+    };
+  }, {});
 }
 
 async function run() {
@@ -47,33 +152,7 @@ async function run() {
 
   const url = url0;
   await new Promise(r => setTimeout(r, 500));
-  await playUrl(url, address);
+  await queueSong(url, address);
 }
 
 //run();
-
-async function playUrl(url, address) {
-  const device = new Sonos(address);
-  await device.play(url);
-
-  const tr = await device.currentTrack();
-  console.log(`Playing ${tr.artist}/${tr.album}/${tr.title}`);
-}
-
-//??? update devices by id with more info
-async function queryDevices() {
-  const add = new AsyncDeviceDiscovery();
-  const devices = await add.discoverMultiple();
-  //console.log('devs', devices);
-  const descriptions = await Promise.all(devices.map(device => device.deviceDescription()));
-
-  //console.log('descs', descriptions);
-  return devices.reduce((all, device, index) => {
-    const name = descriptions[index]?.roomName; 
-
-    return {
-      ...all,
-      [name]: device.host,
-    };
-  }, {});
-}

@@ -1,16 +1,10 @@
 import { Fragment } from 'react';
-import { Link, route } from 'preact-router/match';
+import { route } from 'preact-router';
+import { Link } from 'preact-router/match';
 
+import { queueSong } from '../utilities/commands';
 import { toTime, toMb, toKbps } from '../utilities/display';
 import styles from './Song.module.css';
-
-function addSong(song) {
-  //??? add queue options
-  return {
-    type: 'addSong',
-    song: { ...song },
-  };
-}
 
 export default function Song({ guid, entries, exec }) {
   const song = entries[guid];
@@ -52,7 +46,7 @@ export default function Song({ guid, entries, exec }) {
       <Link href="/">Back to home</Link>
       <h1>{song.title}</h1>
       <div className={styles.buttons}>
-        <button onClick={() => exec(addSong(song))}>Play</button>
+        <button onClick={() => exec(queueSong(song))}>Play</button>
       </div>
       {buildDetails(data)}
     </div>

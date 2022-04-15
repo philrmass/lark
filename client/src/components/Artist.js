@@ -1,4 +1,5 @@
-import { Link, route } from 'preact-router/match';
+import { route } from 'preact-router';
+import { Link } from 'preact-router/match';
 import styles from './Artist.module.css';
 
 export default function Artist({ guid, entries }) {

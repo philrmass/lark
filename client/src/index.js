@@ -1,83 +1,59 @@
-//??? move commands to utilities, exec(cmd, player)
-//??? add sonos utilities, postSonos(data)
-//??? add play/pause to sonos route
-
-//??? save devices in local storage
-//??? add output selection modal
-//??? select device as output, save in local storage
-
-//??? add utilities/actions
-//??? add queue and queueing options
-//??? implement locally and on sonos
+//??? add output selection modal, clear queue
 
 //??? add <Breadcrumbs data={song} /> :: Artist, Album, Song, NotFound
-//??? move entries route to server, parse entries on server, remove unneeded data, add new get
+//??? improve the layout
+
+//??? add youtube songs
+//??? add queue and queueing options
+//??? add next song coordination
 import { useEffect, useRef, useState } from 'preact/hooks';
 
-import { parseArtistEntries } from './utilities/data';
+import { exec as execPlayer } from './utilities/player';
+import { exec as execSonos } from './utilities/sonos';
 import { get } from './utilities/network';
+import { useLocalStorage } from './utilities/storage';
 import './reset.css';
 import './index.css';
 import Home from './components/Home';
 
+//??? add env vars
+const isDev = true;
+const API_HOST = isDev ? 'http://0.0.0.0:4445' : '';
+
 export default function App() {
-  const isDev = true;
-  const host = isDev ? 'http://0.0.0.0:4445' : '';
-  const player = useRef(null);
-  const [artists, setArtists] = useState([]);
-  const [entries, setEntries] = useState({});
+  const playerRef = useRef(null);
+  const [artists, setArtists] = useLocalStorage('larkArtists', []);
+  const [entries, setEntries] = useLocalStorage('larkEntries', {});
+  const [queue, setQueue] = useLocalStorage('larkQueue', []);
+  const [devices, setDevices] = useLocalStorage('larkDevices', {});
+  const [output, setOutput] = useLocalStorage('larkOutput', false);
   const [song, setSong] = useState('');
-  const [devices, setDevices] = useState({});
-  const [output, setOutput] = useState(false);
 
   useEffect(() => {
-    get(host, '/artists', (data) => {
-      setArtists(data);
-      setEntries(parseArtistEntries(data));
+    get(API_HOST, '/artists', setArtists);
+    get(API_HOST, '/entries', setEntries);
+    get(API_HOST, '/sonos', (data) => {
+      setOutput(device => data[device?.id] ?? null);
+      setDevices(data);
     });
-    get(host, '/sonos', setDevices);
-  }, [host]);
+  }, [setArtists, setDevices, setEntries, setOutput]);
 
   async function exec(cmd) {
-    if (cmd.type === 'addSong') {
-      if (output) {
-        const encodedPath = encodeURIComponent(cmd.song.path);
-        const data = {
-          ipAddress: devices.Kitchen,
-          path: encodedPath,
-          action: 'play',
-        };
-        const params = {
-          method: 'post',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data),
-        };
-        await fetch(`${host}/sonos/`, params);
-        console.log('SEND', data, params);
-      } else {
-        try {
-          const encodedPath = encodeURIComponent(cmd.song.path);
-          const response = await fetch(`${host}/songs/${encodedPath}`);
-          const blob = await response.blob();
-          const url = URL.createObjectURL(blob);
-
-          player.current.src = url;
-          player.current.play();
-          setSong({ ...cmd.song, url });
-        } catch (err) {
-          console.error(`Error fetching song (${cmd.path}):`, err);
-        }
-      }
-    } else if (cmd.type === 'togglePlay') {
-      if (output) {
-        console.warn('TOGGLE PLAY SONOS', cmd);
-      } else {
-        player.current.paused ? player.current.play() : player.current.pause();
-      }
+    if (output) {
+      update(await execSonos(cmd, output));
     } else {
-      console.warn('UNKNOWN CMD', cmd);
+      update(await execPlayer(cmd, playerRef.current));
+    }
+  }
+
+  function update(result) {
+    if (result) {
+      if (result.song) {
+        setQueue(q => [result.song, ...q]);
+        setSong(result.song);
+      } else {
+        console.warn('UNKNOWN-RESULT', result);
+      }
     }
   }
 
@@ -92,9 +68,8 @@ export default function App() {
         exec={exec}
         setOutput={setOutput}
       />
-      <div style={{ padding: '32px' }}>
-        <audio ref={player} controls />
-        <div>{Object.keys(devices)}</div>
+      <div style={{ padding: '16px' }}>
+        <audio ref={playerRef} controls />
       </div>
     </>
   );

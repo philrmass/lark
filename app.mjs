@@ -7,17 +7,18 @@ import koaBody from 'koa-body';
 
 import config from './config.mjs';
 import { getDevices, postAction } from './routes/sonos.mjs';
+import { parseArtistEntries } from './utilities/entries.mjs';
 import { initLibrary, parseArtists } from './utilities/library.mjs';
 
 const port = 4445;
-let songsByGuid = {};
 let artists = [];
+let entries = {};
 
 async function run() {
   const start = Date.now();
 
   const newPaths = [...process.argv].slice(2);
-  songsByGuid = await initLibrary(config, newPaths);
+  const songsByGuid = await initLibrary(config, newPaths);
   console.log(`Loaded ${Object.keys(songsByGuid).length} songs in ${toSecs(start, Date.now())} seconds`);
 
   if (Object.keys(songsByGuid).length === 0) {
@@ -28,15 +29,18 @@ async function run() {
   artists = parseArtists(songsByGuid);
   console.log(`Parsed ${artists.length} artists in ${toSecs(start, Date.now())} seconds`);
 
+  entries = parseArtistEntries(artists);
+  console.log(`Created ${Object.keys(entries).length} etnries`);
+
   console.log('Starting koa server');
   const app = new koa();
   app.use(cors());
   app.use(serve('client/build'));
 
   const router = koaRouter();
-  //router.get('/songs', getEntries);
   router.get('/songs/:path', getSong);
   router.get('/artists', getArtists);
+  router.get('/entries', getEntries);
   router.get('/sonos', getDevices);
   router.post('/sonos', koaBody(), postAction);
 
@@ -50,18 +54,14 @@ function toSecs(start, end) {
   return secs.toFixed(3);
 }
 
-// ??? parse entries from artists and return
-// ??? simplify artists data
-/*
 async function getEntries(ctx) {
   try {
-    ctx.body = JSON.stringify(songsByGuid);
+    ctx.body = JSON.stringify(entries);
     ctx.response.set('content-type', 'application/json');
   } catch (err) {
     ctx.throw(500, err);
   }
 }
-*/
 
 async function getSong(ctx) {
   const path = decodeURIComponent(ctx.params.path);
@@ -77,7 +77,7 @@ async function getSong(ctx) {
   } catch (err) {
     ctx.throw(500, err);
   }
-};
+}
 
 async function getArtists(ctx) {
   try {
