@@ -50,5 +50,5 @@ module.exports.scrollIntoView = scrollIntoView;
 
 export function calcGuid(value) {
   const namespaceGuid = '4986d826-5b55-48a9-8483-eb31cdac06c6';
-  return uuidv5(value, namespaceGuid);
+  return uuidv5(value || '', namespaceGuid);
 }

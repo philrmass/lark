@@ -4,6 +4,7 @@ import koaRouter from '@koa/router';
 import cors from '@koa/cors';
 import serve from 'koa-static';
 import koaBody from 'koa-body';
+import ytdl from 'ytdl-core';
 
 import config from './config.mjs';
 import { getDevices, postAction } from './routes/sonos.mjs';
@@ -54,8 +55,10 @@ function toSecs(start, end) {
   return secs.toFixed(3);
 }
 
-async function getEntries(ctx) {
+function getEntries(ctx) {
   try {
+    console.log(`getEntries (${Object.keys(entries).length})`);
+
     ctx.body = JSON.stringify(entries);
     ctx.response.set('content-type', 'application/json');
   } catch (err) {
@@ -63,11 +66,11 @@ async function getEntries(ctx) {
   }
 }
 
-async function getSong(ctx) {
-  const path = decodeURIComponent(ctx.params.path);
-  console.log(`[${path}]`);
-
+function getSong(ctx) {
   try {
+    const path = decodeURIComponent(ctx.params.path);
+    console.log(`getSong '${path}'`);
+
     if (fs.existsSync(path)) {
       ctx.body = fs.createReadStream(path);
       ctx.attachment(path);
@@ -79,10 +82,29 @@ async function getSong(ctx) {
   }
 }
 
-async function getArtists(ctx) {
+function getArtists(ctx) {
+  console.log(`getArtists (${Object.keys(artists).length})`);
+
   try {
     ctx.body = JSON.stringify(artists);
     ctx.response.set('content-type', 'application/json');
+  } catch (err) {
+    ctx.throw(500, err);
+  }
+}
+
+export async function getYoutube(ctx) {
+  try {
+    const path = decodeURIComponent(ctx.params.path);
+    console.log(`[${path}]`);
+
+    const url2 = 'https://www.youtube.com/watch?v=u8pVZ5hTGJQ';
+    const info = await ytdl.getInfo(url2);
+    const formats = ytdl.filterFormats(info.formats, 'audioonly');
+    const format = formats[0];
+    const yt = ytdl(url2, { format });
+    ctx.body = yt;
+    ctx.attachment(url2);
   } catch (err) {
     ctx.throw(500, err);
   }

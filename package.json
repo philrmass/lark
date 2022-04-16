@@ -21,6 +21,7 @@
     "koa-body": "^4.2.0",
     "koa-static": "^5.0.0",
     "music-metadata": "^7.12.2",
-    "sonos": "^1.14.1"
+    "sonos": "^1.14.1",
+    "ytdl-core": "^4.11.0"
   }
 }
