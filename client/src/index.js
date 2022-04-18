@@ -1,10 +1,11 @@
-//??? add output selection modal, clear queue
-
 //??? add <Breadcrumbs data={song} /> :: Artist, Album, Song, NotFound
-//??? improve the layout
+//??? add play and info buttons to songs in list
+//??? improve the layout, fix sizes
+//??? add volume display
 
-//??? add youtube songs
+//??? clear queue on device if not matching
 //??? add queue and queueing options
+
 //??? add next song coordination
 import { useEffect, useRef, useState } from 'preact/hooks';
 
