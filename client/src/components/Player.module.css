@@ -1,9 +1,10 @@
-.player {
+.main {
   display: flex;
   align-items: center;
 }
 
 .play {
+  flex-shrink: 0;
   width: 4em;
   height: 4em;
   margin-right: 4px;
@@ -14,4 +15,9 @@
   height: 2em;
   display: block;
   padding: 2px 0;
+}
+
+.title {
+  padding: var(--size1);
+  font-size: var(--text-med);
 }

@@ -1,13 +1,25 @@
-//??? add <Breadcrumbs data={song} /> :: Artist, Album, Song, NotFound
 //??? add play and info buttons to songs in list
-//??? improve the layout, fix sizes
-//??? add volume display
+//??? scroll songs in a list
 
-//??? clear queue on device if not matching
 //??? add queue and queueing options
+//??? clear queue on device change
+//??? sync queue when song added
+//??? add queue overlay
 
+//??? add volume display
+//??? add time display
+
+//??? add search
+//??? add by-letter quick scroll on right-side
+
+//??? add duration to album data
+//??? add release date and duration display
 //??? add next song coordination
-import { useEffect, useRef, useState } from 'preact/hooks';
+//??? add art to album display
+
+//??? add env vars to api host
+//??? add spinner
+import { useEffect, useRef } from 'preact/hooks';
 
 import { exec as execPlayer } from './utilities/player';
 import { exec as execSonos } from './utilities/sonos';
@@ -19,7 +31,7 @@ import Home from './components/Home';
 
 //??? add env vars
 const isDev = true;
-const API_HOST = isDev ? 'http://0.0.0.0:4445' : '';
+const API_HOST = isDev ? 'http://192.168.1.29:4445' : '';
 
 export default function App() {
   const playerRef = useRef(null);
@@ -28,7 +40,7 @@ export default function App() {
   const [queue, setQueue] = useLocalStorage('larkQueue', []);
   const [devices, setDevices] = useLocalStorage('larkDevices', {});
   const [output, setOutput] = useLocalStorage('larkOutput', false);
-  const [song, setSong] = useState('');
+  const [song, setSong] = useLocalStorage('larkSong', null);
 
   useEffect(() => {
     get(API_HOST, '/artists', setArtists);
@@ -69,9 +81,7 @@ export default function App() {
         exec={exec}
         setOutput={setOutput}
       />
-      <div style={{ padding: '16px' }}>
-        <audio ref={playerRef} controls />
-      </div>
+      <audio ref={playerRef} />
     </>
   );
 }

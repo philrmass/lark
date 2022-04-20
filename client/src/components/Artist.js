@@ -1,6 +1,8 @@
 import { route } from 'preact-router';
 import { Link } from 'preact-router/match';
+
 import styles from './Artist.module.css';
+import Breadcrumbs from './Breadcrumbs';
 
 export default function Artist({ guid, entries }) {
   const artist = entries[guid];
@@ -19,16 +21,15 @@ export default function Artist({ guid, entries }) {
     return (
       <Link href={`/albums/${guid}`}>
         <div className={styles.album}>
-          {`${album.title} (${guid.slice(0, 4)})`}
+          {album.title}
         </div>
       </Link>
     );
   }
 
   return (
-    <div>
-      <Link href='/' className='back'>{'< Home'}</Link>
-      <h1>{artist.name}</h1>
+    <div className={styles.main}>
+      <Breadcrumbs entry={artist} />
       {artist.albumGuids.map(guid => buildAlbum(guid))}
     </div>
   );

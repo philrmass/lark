@@ -1,5 +1,12 @@
 :root {
   --border: 1px solid #c8c8c8;
+  --border-lt: 1px solid #e0e0e0;
+  --text-med: 1.2em;
+  --text-lt: #585858;
+  --size0: 4px;
+  --size1: 8px;
+  --size2: 16px;
+  --bg-lt-gray: #e8e8e8;
 }
 
 html, body {

@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react';
 
+const mock = { getItem: () => {}, setItem: () => {} };
+const localStorage = typeof window !== 'undefined' ? window.localStorage : mock; 
+
 export function useLocalStorage(key, initialValue) {
   const [value, setValue] = useState(() => {
-    const stored = window.localStorage.getItem(key);
+    const stored = localStorage?.getItem(key);
     if (stored) {
       try {
         return JSON.parse(stored);
@@ -10,12 +13,12 @@ export function useLocalStorage(key, initialValue) {
         console.error('localStorage error:', key, stored, err); //eslint-disable-line no-console
       }
     }
-    window.localStorage.setItem(key, JSON.stringify(initialValue));
+    localStorage?.setItem(key, JSON.stringify(initialValue));
     return initialValue;
   });
 
   useEffect(() => {
-    window.localStorage.setItem(key, JSON.stringify(value));
+    localStorage?.setItem(key, JSON.stringify(value));
   }, [key, value]);
 
   return [value, setValue];

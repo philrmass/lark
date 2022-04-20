@@ -1,5 +1,9 @@
+.main {
+  padding: var(--size2);
+}
+
 .song {
-  font-size: 1.2em;
-  padding-top: 8px;
-  padding-left: 16px;
+  border-top: var(--border);
+  padding: var(--size1) var(--size2);
+  font-size: var(--text-med);
 }

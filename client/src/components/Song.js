@@ -5,6 +5,7 @@ import { Link } from 'preact-router/match';
 import { queueSong } from '../utilities/commands';
 import { toTime, toMb, toKbps } from '../utilities/display';
 import styles from './Song.module.css';
+import Breadcrumbs from './Breadcrumbs';
 
 export default function Song({ guid, entries, exec }) {
   const song = entries[guid];
@@ -18,6 +19,7 @@ export default function Song({ guid, entries, exec }) {
   }
 
   const data = [
+    ['Title', song.title],
     ['Artist', song.artist],
     ['Album', song.album],
     ['Album Index', song.songIndex],
@@ -42,9 +44,8 @@ export default function Song({ guid, entries, exec }) {
   }
 
   return (
-    <div className={styles.song}>
-      <Link href="/">Back to home</Link>
-      <h1>{song.title}</h1>
+    <div className={styles.main}>
+      <Breadcrumbs entry={song} />
       <div className={styles.buttons}>
         <button onClick={() => exec(queueSong(song))}>Play</button>
       </div>

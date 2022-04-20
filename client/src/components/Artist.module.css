@@ -1,5 +1,9 @@
+.main {
+  padding: var(--size2);
+}
+
 .album {
-  margin-left: 16px;
-  margin-top: 8px;
-  color: #484848;
+  border-top: var(--border);
+  padding: var(--size1) var(--size2);
+  font-size: var(--text-med);
 }

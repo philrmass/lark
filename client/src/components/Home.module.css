@@ -1,7 +1,11 @@
 .header {
-  padding: 8px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #e8e8e8;
+  padding: var(--size2);
+  background: var(--bg-lt-gray);
+}
+
+.output {
+  flex-shrink: 0;
 }

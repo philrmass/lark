@@ -23,7 +23,9 @@ export default function Home({
     <div>
       <div className={styles.header}>
         <Player song={song} exec={exec} />
-        <Output devices={devices} output={output} setOutput={setOutput} />
+        <div className={styles.output}>
+          <Output devices={devices} output={output} setOutput={setOutput} />
+        </div>
       </div>
       <Queue />
       <Router>

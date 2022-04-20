@@ -1,5 +1,5 @@
 const isDev = true;
-const API_HOST = isDev ? 'http://0.0.0.0:4445' : '';
+const API_HOST = isDev ? 'http://192.168.1.29:4445' : '';
 
 export async function exec(cmd, player) {
   const commands = {

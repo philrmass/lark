@@ -1,5 +1,6 @@
 .queue {
-  padding: 8px;
-  background: #e0e0e0;
-  color: #808080;
+  padding: var(--size2);
+  margin-top: 1px;
+  background: var(--bg-lt-gray);
+  color: var(--text-lt);
 }

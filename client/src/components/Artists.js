@@ -1,5 +1,7 @@
 import { Link } from 'preact-router/match';
+
 import styles from './Artists.module.css';
+import Breadcrumbs from './Breadcrumbs';
 
 export default function Artists({ artists }) {
   function buildArtist(artist) {
@@ -13,7 +15,8 @@ export default function Artists({ artists }) {
   }
 
   return (
-    <div>
+    <div className={styles.main}>
+      <Breadcrumbs />
       {artists.map(artist => buildArtist(artist))}
     </div>
   );

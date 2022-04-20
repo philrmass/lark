@@ -1,11 +1,9 @@
-.artist:first-of-type {
-  border-top: var(--border);
+.main {
+  padding: var(--size2);
 }
 
 .artist {
-  padding: 8px 16px;
-  font-size: 1.2em;
-  border-bottom: var(--border);
-  border-left: var(--border);
-  border-right: var(--border);
+  border-top: var(--border);
+  padding: var(--size1) var(--size2);
+  font-size: var(--text-med);
 }

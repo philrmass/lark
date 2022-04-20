@@ -1,0 +1,18 @@
+.main {
+  font-size: var(--text-med);
+  margin-bottom: var(--size1);
+}
+
+.link {
+}
+
+.text {
+  color: var(--text-lt);
+  user-select: none;
+}
+
+.separator {
+  color: var(--text-lt);
+  user-select: none;
+  padding: 0 var(--size0);
+}
