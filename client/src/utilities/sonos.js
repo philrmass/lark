@@ -1,6 +1,3 @@
-const isDev = true;
-const API_HOST = isDev ? 'http://0.0.0.0:4445' : '';
-
 export async function exec(cmd, device) {
   const commands = {
     adjustVolume,
@@ -56,7 +53,7 @@ async function togglePlay(cmd, device) {
 }
 
 async function post(data) {
-  const url = `${API_HOST}/sonos/`;
+  const url = `${process.env.API_HOST}/sonos/`;
   const params = {
     method: 'post',
     headers: {

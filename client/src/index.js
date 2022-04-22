@@ -29,10 +29,6 @@ import './reset.css';
 import './index.css';
 import Home from './components/Home';
 
-//??? add env vars
-const isDev = true;
-const API_HOST = isDev ? 'http://192.168.1.29:4445' : '';
-
 export default function App() {
   const playerRef = useRef(null);
   const [artists, setArtists] = useLocalStorage('larkArtists', []);
@@ -43,9 +39,10 @@ export default function App() {
   const [song, setSong] = useLocalStorage('larkSong', null);
 
   useEffect(() => {
-    get(API_HOST, '/artists', setArtists);
-    get(API_HOST, '/entries', setEntries);
-    get(API_HOST, '/sonos', (data) => {
+    console.log(`Starting ${process.env.NODE_ENV} env`);
+    get(process.env.API_HOST, '/artists', setArtists);
+    get(process.env.API_HOST, '/entries', setEntries);
+    get(process.env.API_HOST, '/sonos', (data) => {
       setOutput(device => data[device?.id] ?? null);
       setDevices(data);
     });

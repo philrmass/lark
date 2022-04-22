@@ -1,6 +1,3 @@
-const isDev = true;
-const API_HOST = isDev ? 'http://192.168.1.29:4445' : '';
-
 export async function exec(cmd, player) {
   const commands = {
     adjustVolume,
@@ -27,7 +24,7 @@ function adjustVolume(cmd, player) {
 async function queueSong(cmd, player) {
   try {
     const encodedPath = encodeURIComponent(cmd.song.path);
-    const response = await fetch(`${API_HOST}/songs/${encodedPath}`);
+    const response = await fetch(`${process.env.API_HOST}/songs/${encodedPath}`);
     const blob = await response.blob();
     const url = URL.createObjectURL(blob);
 
