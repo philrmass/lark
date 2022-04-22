@@ -13,14 +13,6 @@ html, body {
   font: 14px/1.21 'Helvetica Neue', arial, sans-serif;
 }
 
-button {
-  padding: 8px 16px;
-  border: 1px solid #808080;
-  border-radius: 4px;
-  background: #383838;
-  color: #f8f8f8;
-}
-
 h1 {
   font-size: 1.8em;
 }
@@ -29,6 +21,14 @@ h1 {
   margin-bottom: 16px;
   font-size: 1.4em;
   color: #808080;
+}
+
+.button {
+  padding: 8px 16px;
+  border: 1px solid #808080;
+  border-radius: 4px;
+  background: #383838;
+  color: #f8f8f8;
 }
 
 .json {

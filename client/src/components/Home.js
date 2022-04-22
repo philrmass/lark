@@ -14,6 +14,7 @@ export default function Home({
   artists,
   devices,
   entries,
+  queue,
   output,
   song,
   exec,
@@ -27,11 +28,11 @@ export default function Home({
           <Output devices={devices} output={output} setOutput={setOutput} />
         </div>
       </div>
-      <Queue />
+      <Queue queue={queue} />
       <Router>
         <Artists path='/' artists={artists} />
         <Artist path='/artists/:guid' entries={entries} />
-        <Album path='/albums/:guid' entries={entries} />
+        <Album path='/albums/:guid' entries={entries} exec={exec} />
         <Song path='/songs/:guid' entries={entries} exec={exec} />
         <NotFound default />
       </Router>

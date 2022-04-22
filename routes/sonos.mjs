@@ -1,9 +1,6 @@
 import ytdl from 'ytdl-core';
 import { AsyncDeviceDiscovery, Sonos } from 'sonos';
 
-//??? detect ip address of server
-const host = 'http://192.168.1.29:4445';
-
 export async function getDevices(ctx) {
   try {
     const devices = await queryDevices();
@@ -45,7 +42,7 @@ function action(data, device) {
     case 'clear':
       return clear(device);
     case 'queueSong':
-      return queueSong(device, data.path);
+      return queueSong(device, data.url, data.index, data.play);
     case 'setVolume':
       return setVolume(device, data.value);
     case 'togglePlay':
@@ -69,19 +66,23 @@ async function clear(device) {
   return { queue };
 }
 
-async function queueSong(device, path) {
-  const url = `${host}/songs/${path}`;
+async function queueSong(device, url, index, play) {
+  //queue(uri, positionInQueue);
+  //selectTrack(index) [from index 1]
+  console.log(`QUEUE-SONG [${index}] (${play})`); //??? implement
   await device.play(url);
 
-  const queue = await device.getQueue();
-  console.log(`queueSong [${queue.items.map(i => i.title)}]`);
+  const all = await device.getQueue();
+  const items = all?.items ?? [];
+  const queue = items.map(item => ({ url: item.uri }));
+  console.log(`queueSong (${queue.length})`);
   return { queue };
 }
 
 async function setVolume(device, value) {
   await device.setVolume(value);
-  const volume = await device.getVolume();
 
+  const volume = await device.getVolume();
   console.log(`setVolume (${volume})`);
   return { volume };
 }
@@ -89,8 +90,10 @@ async function setVolume(device, value) {
 async function togglePlay(device) {
   await device.togglePlayback();
 
-  const current = await device.currentTrack();
-  console.log(`togglePlay (${current.artist}::${current.album}::${current.title}`);
+  const state = await device.getCurrentState();
+  const playing = state !== 'paused';
+  console.log(`togglePlay (${state})`);
+  return { playing };
 }
 
 //??? actions

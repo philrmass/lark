@@ -39,7 +39,7 @@ export default function Output({ devices, output, setOutput }) {
 
   return (
     <div className={styles.output}>
-      <button onClick={() => dialogRef.current.showModal()}>
+      <button className='button' onClick={() => dialogRef.current.showModal()}>
         {output ? output?.name : 'Local'}
       </button>
       {buildDialog()}

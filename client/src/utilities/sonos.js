@@ -19,19 +19,34 @@ async function adjustVolume(cmd, device) {
     ipAddress: device.ipAddress,
   };
 
-  await post(data);
+  return await post(data);
 }
 
 async function queueSong(cmd, device) {
+  const url = `${process.env.API_HOST}/songs/${encodeURIComponent(cmd.song.path)}`;
   const data = {
     action: 'queueSong',
-    index: 0,
-    path: encodeURIComponent(cmd.song.path),
+    url,
+    index: cmd.index,
+    play: cmd.play,
     ipAddress: device.ipAddress,
   };
-  await post(data);
 
-  return { song: { ...cmd.song } };
+  const result = await post(data);
+  const items = result.queue ?? [];
+  const queue = items.map(item => ({ path: getPath(item.url) }));
+  return { song: cmd.song, queue };
+}
+
+function getPath(url) {
+  const base = `${process.env.API_HOST}/songs/`;
+  const length = base.length;
+
+  if (url.startsWith(base)) {
+    return decodeURIComponent(url.slice(length));
+  }
+
+  return null;
 }
 
 async function setVolume(cmd, device) {
@@ -41,7 +56,7 @@ async function setVolume(cmd, device) {
     ipAddress: device.ipAddress,
   };
 
-  await post(data);
+  return await post(data);
 }
 
 async function togglePlay(cmd, device) {
@@ -49,7 +64,8 @@ async function togglePlay(cmd, device) {
     action: 'togglePlay',
     ipAddress: device.ipAddress,
   };
-  await post(data);
+
+  return await post(data);
 }
 
 async function post(data) {
@@ -62,5 +78,6 @@ async function post(data) {
     body: JSON.stringify(data),
   };
 
-  await fetch(url, params);
+  const response = await fetch(url, params);
+  return await response.json();
 }

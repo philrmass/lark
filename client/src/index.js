@@ -1,16 +1,17 @@
-//??? add play and info buttons to songs in list
 //??? scroll songs in a list
 
 //??? add queue and queueing options
-//??? clear queue on device change
-//??? sync queue when song added
+//??? sync queue on device change
+//??? sync queue on mismatch
+//??? add queue display (items, time, next, clear, clear all)
 //??? add queue overlay
+//??? clear queue button
 
+//??? add by-letter quick scroll on right-side
 //??? add volume display
 //??? add time display
 
 //??? add search
-//??? add by-letter quick scroll on right-side
 
 //??? add duration to album data
 //??? add release date and duration display
@@ -39,12 +40,13 @@ export default function App() {
   const [song, setSong] = useLocalStorage('larkSong', null);
 
   useEffect(() => {
-    console.log(`Starting ${process.env.NODE_ENV} env`);
+    console.log(`Starting '${process.env.NODE_ENV}' with host '${process.env.API_HOST}'`);
     get(process.env.API_HOST, '/artists', setArtists);
     get(process.env.API_HOST, '/entries', setEntries);
     get(process.env.API_HOST, '/sonos', (data) => {
       setOutput(device => data[device?.id] ?? null);
       setDevices(data);
+      //??? sync queue after device is set
     });
   }, [setArtists, setDevices, setEntries, setOutput]);
 
@@ -57,8 +59,11 @@ export default function App() {
   }
 
   function update(result) {
+    console.log('update', result);
     if (result) {
       if (result.song) {
+        //??? compare result queue[x].path to local queue[y].path
+        //??? sync queue if mismatch
         setQueue(q => [result.song, ...q]);
         setSong(result.song);
       } else {
@@ -73,6 +78,7 @@ export default function App() {
         artists={artists}
         devices={devices}
         entries={entries}
+        queue={queue}
         output={output}
         song={song}
         exec={exec}

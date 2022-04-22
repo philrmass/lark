@@ -5,10 +5,12 @@ export function adjustVolume(inc) {
   };
 }
 
-export function queueSong(song) {
+export function queueSong(song, index = -1, play) {
   return {
     type: 'queueSong',
     song: { ...song },
+    index,
+    play,
   };
 }
 

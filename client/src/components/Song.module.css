@@ -3,7 +3,14 @@
 }
 
 .buttons {
+  display: flex;
+  align-items: center;
+  gap: var(--size0);
   padding: var(--size1) 0;
+}
+
+.label {
+  padding-left: var(--size0);
 }
 
 .detailsSection {

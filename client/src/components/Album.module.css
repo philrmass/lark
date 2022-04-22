@@ -3,7 +3,14 @@
 }
 
 .song {
+  display: flex;
+  align-items: center;
   border-top: var(--border);
-  padding: var(--size1) var(--size2);
+  padding: var(--size1) 0;
   font-size: var(--text-med);
+}
+
+.title {
+  padding: 0 16px;
+  flex-grow: 1;
 }
