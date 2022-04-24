@@ -1,16 +1,9 @@
-.header {
+.main {
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
   padding: var(--size2);
+  border-top: var(--border);
   background: var(--bg-lt-gray);
-}
-
-.output {
-  flex-shrink: 0;
-}
-
-.fixed {
-  position: sticky;
-  top: 0;
+  color: var(--text-lt);
 }

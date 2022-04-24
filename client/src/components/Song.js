@@ -1,14 +1,19 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { route } from 'preact-router';
 
 import { queueSong } from '../utilities/commands';
 import { toTime, toMb, toKbps } from '../utilities/display';
 import styles from './Song.module.css';
-import Breadcrumbs from './Breadcrumbs';
 
-export default function Song({ guid, entries, exec }) {
+export default function Song({ guid, entries, exec, setContent }) {
   const song = entries[guid];
   const [play, setPlay] = useState(true);
+
+  useEffect(() => {
+    if (song) {
+      setContent(song);
+    }
+  }, [song, setContent]);
 
   if (!song) {
     return <div>Loading...</div>;
@@ -51,7 +56,6 @@ export default function Song({ guid, entries, exec }) {
 
   return (
     <div className={styles.main}>
-      <Breadcrumbs entry={song} />
       <div className={styles.buttons}>
         <button className='button' onClick={() => queueAt(0)}>Now</button>
         <button className='button' onClick={() => queueAt(1)}>Next</button>

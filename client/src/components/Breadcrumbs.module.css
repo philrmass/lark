@@ -1,9 +1,7 @@
 .main {
+  padding: var(--size2);
+  background: var(--bg-white);
   font-size: var(--text-med);
-  margin-bottom: var(--size1);
-}
-
-.link {
 }
 
 .text {

@@ -1,12 +1,13 @@
 .main {
-  padding: var(--size2);
+  padding: 0 var(--size2) var(--size2) var(--size2);
 }
 
 .buttons {
   display: flex;
   align-items: center;
   gap: var(--size0);
-  padding: var(--size1) 0;
+  padding: var(--size2) 0;
+  border-top: var(--border);
 }
 
 .label {
@@ -15,7 +16,6 @@
 
 .detailsSection {
   display: inline-block;
-  margin-top: var(--size1);
   border: var(--border);
   background: var(--bg-lt);
 }

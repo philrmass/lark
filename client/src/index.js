@@ -1,17 +1,16 @@
-//??? scroll songs in a list
+//??? deploy to server
 
+//??? add queue display (items, time, next, clear, clear all)
 //??? add queue and queueing options
 //??? sync queue on device change
-//??? sync queue on mismatch
-//??? add queue display (items, time, next, clear, clear all)
-//??? add queue overlay
-//??? clear queue button
+//??? sync queue on mismatch in update
 
 //??? add by-letter quick scroll on right-side
 //??? add volume display
 //??? add time display
 
 //??? add search
+//??? limit song title to X characters, add hover tooltip if longer
 
 //??? add duration to album data
 //??? add release date and duration display
@@ -35,6 +34,7 @@ export default function App() {
   const [artists, setArtists] = useLocalStorage('larkArtists', []);
   const [entries, setEntries] = useLocalStorage('larkEntries', {});
   const [queue, setQueue] = useLocalStorage('larkQueue', []);
+  const [index, setIndex] = useLocalStorage('larkIndex', 0);
   const [devices, setDevices] = useLocalStorage('larkDevices', {});
   const [output, setOutput] = useLocalStorage('larkOutput', false);
   const [song, setSong] = useLocalStorage('larkSong', null);
@@ -51,6 +51,10 @@ export default function App() {
   }, [setArtists, setDevices, setEntries, setOutput]);
 
   async function exec(cmd) {
+    if (cmd.type === 'clear') {
+      setQueue([]);
+    }
+
     if (output) {
       update(await execSonos(cmd, output));
     } else {
@@ -79,6 +83,7 @@ export default function App() {
         devices={devices}
         entries={entries}
         queue={queue}
+        index={index}
         output={output}
         song={song}
         exec={exec}

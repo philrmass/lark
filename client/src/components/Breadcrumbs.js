@@ -5,13 +5,17 @@ import styles from './Breadcrumbs.module.css';
 export default function Breadcrumbs({ entry }) {
   const links = generateLinks(entry);
 
+  if (!entry) {
+    return null;
+  }
+
   function buildLink(link) {
     const key = `${link.label}::${link.path}`;
 
     if (link.path) {
       return (
         <>
-          <Link href={link.path} className={styles.link}>{link.label}</Link>
+          <Link href={link.path}>{link.label}</Link>
           <span className={styles.separator}>/</span>
         </>
       );
@@ -21,9 +25,12 @@ export default function Breadcrumbs({ entry }) {
   }
 
   return (
-    <div className={styles.main}>
-      {links.map(link => buildLink(link))}
-    </div>
+    <>
+      <div className={styles.main}>
+        {links.map(link => buildLink(link))}
+      </div>
+      <div className={styles.bottom} />
+    </>
   );
 }
 
@@ -51,5 +58,9 @@ function generateLinks(entry) {
     return [home, artist];
   }
 
-  return [home];
+  if (entry?.type === 'artists') {
+    return [home];
+  }
+
+  return null;
 }

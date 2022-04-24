@@ -1,11 +1,17 @@
+import { useEffect } from 'react';
 import { route } from 'preact-router';
 import { Link } from 'preact-router/match';
 
 import styles from './Artist.module.css';
-import Breadcrumbs from './Breadcrumbs';
 
-export default function Artist({ guid, entries }) {
+export default function Artist({ guid, entries, setContent }) {
   const artist = entries[guid];
+
+  useEffect(() => {
+    if (artist) {
+      setContent(artist);
+    }
+  }, [artist, setContent]);
 
   if (!artist) {
     return <div>Loading...</div>;
@@ -29,7 +35,6 @@ export default function Artist({ guid, entries }) {
 
   return (
     <div className={styles.main}>
-      <Breadcrumbs entry={artist} />
       {artist.albumGuids.map(guid => buildAlbum(guid))}
     </div>
   );

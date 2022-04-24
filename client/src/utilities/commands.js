@@ -5,6 +5,12 @@ export function adjustVolume(inc) {
   };
 }
 
+export function clear() {
+  return {
+    type: 'clear',
+  };
+}
+
 export function queueSong(song, index = -1, play) {
   return {
     type: 'queueSong',

@@ -1,12 +1,18 @@
+import { useEffect } from 'react';
 import { route } from 'preact-router';
 import { Link } from 'preact-router/match';
 
 import { queueSong } from '../utilities/commands';
 import styles from './Album.module.css';
-import Breadcrumbs from './Breadcrumbs';
 
-export default function Album({ guid, entries, exec }) {
+export default function Album({ guid, entries, exec, setContent }) {
   const album = entries[guid];
+
+  useEffect(() => {
+    if (album) {
+      setContent(album);
+    }
+  }, [album, setContent]);
 
   if (!album) {
     return <div>Loading...</div>;
@@ -30,7 +36,6 @@ export default function Album({ guid, entries, exec }) {
 
   return (
     <div className={styles.main}>
-      <Breadcrumbs entry={album} />
       {album.songGuids.map(guid => buildSong(guid))}
     </div>
   );

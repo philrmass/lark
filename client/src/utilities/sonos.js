@@ -1,5 +1,6 @@
 export async function exec(cmd, device) {
   const commands = {
+    clear,
     adjustVolume,
     queueSong,
     setVolume,
@@ -16,6 +17,15 @@ async function adjustVolume(cmd, device) {
   const data = {
     action: 'adjustVolume',
     inc: cmd.inc,
+    ipAddress: device.ipAddress,
+  };
+
+  return await post(data);
+}
+
+async function clear(cmd, device) {
+  const data = {
+    action: 'clear',
     ipAddress: device.ipAddress,
   };
 

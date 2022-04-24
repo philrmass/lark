@@ -1,9 +1,13 @@
+import { useEffect } from 'react';
 import { Link } from 'preact-router/match';
 
 import styles from './Artists.module.css';
-import Breadcrumbs from './Breadcrumbs';
 
-export default function Artists({ artists }) {
+export default function Artists({ artists, setContent }) {
+  useEffect(() => {
+    setContent({ type: 'artists' });
+  }, [setContent]);
+
   function buildArtist(artist) {
     return (
       <Link href={`/artists/${artist.guid}`}>
@@ -16,7 +20,6 @@ export default function Artists({ artists }) {
 
   return (
     <div className={styles.main}>
-      <Breadcrumbs />
       {artists.map(artist => buildArtist(artist))}
     </div>
   );
