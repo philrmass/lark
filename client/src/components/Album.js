@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { route } from 'preact-router';
 import { Link } from 'preact-router/match';
 
-import { queueSong } from '../utilities/commands';
+import { queueSong } from '../utilities/actions';
 import styles from './Album.module.css';
 
 export default function Album({ guid, entries, exec, setContent }) {

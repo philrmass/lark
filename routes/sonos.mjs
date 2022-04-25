@@ -1,6 +1,5 @@
-import ytdl from 'ytdl-core';
+//import ytdl from 'ytdl-core';
 import { AsyncDeviceDiscovery, Sonos } from 'sonos';
-
 export async function getDevices(ctx) {
   try {
     const devices = await queryDevices();
@@ -10,113 +9,6 @@ export async function getDevices(ctx) {
   } catch (err) {
     ctx.throw(500, err);
   }
-}
-
-export async function postAction(ctx) {
-  try {
-    const data = ctx.request.body;
-    let result = null;
-    let error = null;
-
-    if (data.ipAddress) {
-      const device = new Sonos(data.ipAddress);
-      try {
-        result = await action(data, device);
-      } catch (err) {
-        error = err;
-      }
-
-      const response = { ...result, error };
-      ctx.body = JSON.stringify(response);
-      ctx.response.set('content-type', 'application/json');
-    }
-  } catch (err) {
-    ctx.throw(500, `postAction error: [${err}]`);
-  }
-}
-
-function action(data, device) {
-  switch (data.action) {
-    case 'adjustVolume':
-      return adjustVolume(device, data.inc);
-    case 'clear':
-      return clear(device);
-    case 'queueSong':
-      return queueSong(device, data.url, data.index, data.play);
-    case 'setVolume':
-      return setVolume(device, data.value);
-    case 'togglePlay':
-      return togglePlay(device);
-  }
-}
-
-async function adjustVolume(device, inc) {
-  await device.adjustVolume(inc);
-  const volume = await device.getVolume();
-
-  console.log(`adjustVolume (${volume})`);
-  return { volume };
-}
-
-async function clear(device) {
-  await device.flush();
-
-  const queue = await device.getQueue();
-  console.log(`clear [${queue.items.map(i => i.title)}]`);
-  return { queue };
-}
-
-async function queueSong(device, url, index, play) {
-  //queue(uri, positionInQueue);
-  //selectTrack(index) [from index 1]
-  console.log(`QUEUE-SONG [${index}] (${play})`); //??? implement
-  await device.play(url);
-
-  const all = await device.getQueue();
-  const items = all?.items ?? [];
-  const queue = items.map(item => ({ url: item.uri }));
-  console.log(`queueSong (${queue.length})`);
-  return { queue };
-}
-
-async function setVolume(device, value) {
-  await device.setVolume(value);
-
-  const volume = await device.getVolume();
-  console.log(`setVolume (${volume})`);
-  return { volume };
-}
-
-async function togglePlay(device) {
-  await device.togglePlayback();
-
-  const state = await device.getCurrentState();
-  const playing = state !== 'paused';
-  console.log(`togglePlay (${state})`);
-  return { playing };
-}
-
-//??? actions
-//queue(uri, positionInQueue);
-//queueNext(uri);
-//seek(seconds);
-//leaveGroup()
-//next()
-//previous()
-//joinGroup(otherDeviceName)
-//selectTrack(index) [from index 1]
-
-export async function getInfo(device) {
-  const queue = await device.getQueue();
-  const groups = await device.getAllGroups();
-  const current = await device.currentTrack();
-  const volume = await device.getVolume();
-
-  console.log('\nINFO');
-  console.log(' QUEUE ', queue.items.map(i => i.title));
-  console.log(' GROUPS ', groups.map(g => g.Name));
-  console.log(' CURRENT ', [current.artist, current.album, current.title]);
-  console.log(' VOLUME ', volume);
 }
 
 async function queryDevices() {
@@ -144,6 +36,105 @@ async function queryDevices() {
   }, {});
 }
 
+export async function postAction(ctx) {
+  try {
+    const data = ctx.request.body;
+    let status = {};
+    let error = null;
+
+    if (data.ipAddress) {
+      const device = new Sonos(data.ipAddress);
+
+      try {
+        for (const cmd of data.cmds) {
+          console.log(`CMD ${JSON.stringify(cmd, null, 2)}`);
+          await action(cmd, device);
+        }
+        status = await getStatus(device);
+      } catch (err) {
+        console.log('ERR', err);
+        error = err;
+      }
+
+      const response = { ...status, error };
+      ctx.body = JSON.stringify(response);
+      ctx.response.set('content-type', 'application/json');
+    }
+  } catch (err) {
+    ctx.throw(500, `postAction error: [${err}]`);
+  }
+}
+
+function action(cmd, device) {
+  switch (cmd.type) {
+    case 'add':
+      return add(cmd, device);
+    case 'play':
+      return play(cmd, device);
+    default:
+      return console.log(`Unknown command [${cmd.type}]`);
+  }
+}
+
+async function add(cmd, device) {
+  const url = cmd.url;
+  const index = cmd.index + 1;
+
+  await device.queue(url, index);
+
+  console.log(`add' '...${url.slice(-50)}' at ${index}`);
+}
+
+async function play(cmd, device) {
+  if (Number.isInteger(cmd.index)) {
+    const index = cmd.index + 1;
+    await device.selectTrack(index);
+  }
+
+  await device.play();
+
+  const current = await device.currentTrack();
+  console.log(`play '${current.title}' at ${current.queuePosition}`);
+}
+
+async function getStatus(device) {
+  const queue = await device.getQueue();
+  const sonosQueue = queue.items.map(item => ({ url: item.uri }));
+
+  const state = await device.getCurrentState();
+  const playing = state !== 'paused';
+
+  return {
+    sonosQueue,
+    playing,
+  };
+}
+
+// ??? unused commands
+//await device.flush();
+//await device.adjustVolume(inc);
+//const volume = await device.getVolume();
+//await device.togglePlayback();
+//await device.pause();
+//queueNext(uri);
+//seek(seconds);
+//leaveGroup()
+//next()
+//previous()
+//joinGroup(otherDeviceName)
+//const groups = await device.getAllGroups();
+
+/*
+async function setVolume(device, value) {
+  await device.setVolume(value);
+
+  const volume = await device.getVolume();
+  console.log(`setVolume (${volume})`);
+  return { volume };
+}
+*/
+
+/*
 async function run() {
   const host = 'http://192.168.1.29:4445';
   //const address = '192.168.1.17';
@@ -165,13 +156,12 @@ async function run() {
 
   //??? fix youtube
 
-  /*
   const url = url0;
   await new Promise(r => setTimeout(r, 500));
   const device = new Sonos(ipAddress);
   console.log('PLAY\n', url, '\n', device);
   await queueSong(device, encodedPath);
-  */
 }
 
-//run();
+run();
+*/

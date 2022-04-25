@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from 'react';
 import { route } from 'preact-router';
 
-import { queueSong } from '../utilities/commands';
+import { queueSong } from '../utilities/actions';
 import { toTime, toMb, toKbps } from '../utilities/display';
 import styles from './Song.module.css';
 

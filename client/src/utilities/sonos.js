@@ -1,51 +1,47 @@
-export async function exec(cmd, device) {
-  const commands = {
-    clear,
-    adjustVolume,
-    queueSong,
-    setVolume,
-    togglePlay,
-  };
+export async function exec(cmds, device) {
+  const all = cmds.map(cmd => convertCommand(cmd));
+  const filtered = all.filter(cmd => Boolean(cmd));
 
-  const fail = (cmd) => console.error(`Unknown command [${cmd.type}]`);
-  const action = commands[cmd.type] ?? fail;
-
-  return await action(cmd, device);
-}
-
-async function adjustVolume(cmd, device) {
   const data = {
-    action: 'adjustVolume',
-    inc: cmd.inc,
     ipAddress: device.ipAddress,
-  };
-
-  return await post(data);
-}
-
-async function clear(cmd, device) {
-  const data = {
-    action: 'clear',
-    ipAddress: device.ipAddress,
-  };
-
-  return await post(data);
-}
-
-async function queueSong(cmd, device) {
-  const url = `${process.env.API_HOST}/songs/${encodeURIComponent(cmd.song.path)}`;
-  const data = {
-    action: 'queueSong',
-    url,
-    index: cmd.index,
-    play: cmd.play,
-    ipAddress: device.ipAddress,
+    cmds: filtered,
   };
 
   const result = await post(data);
-  const items = result.queue ?? [];
-  const queue = items.map(item => ({ path: getPath(item.url) }));
-  return { song: cmd.song, queue };
+  await console.log('EXEC-SONOS\ndata', data, '\nresult', result);
+
+  return {
+    ...result,
+    queue: convertQueue(result.queue),
+  };
+}
+
+function convertCommand(cmd) {
+  switch (cmd.type) {
+    case 'add':
+      return convertAdd(cmd);
+    case 'play':
+      return cmd;
+    default:
+      console.error(`Unknown command [${cmd.type}]`);
+      return null;
+  }
+}
+
+function convertAdd(cmd) {
+  const url = `${process.env.API_HOST}/songs/${encodeURIComponent(cmd.song.path)}`;
+
+  return {
+    type: cmd.type,
+    index: cmd.index,
+    url,
+  };
+}
+
+function convertQueue(queue) {
+  if (queue) {
+    return queue.map(item => ({ path: getPath(item.url) }));
+  }
 }
 
 function getPath(url) {
@@ -59,11 +55,28 @@ function getPath(url) {
   return null;
 }
 
+/*
+async function adjustVolume(cmd, device) {
+  const data = {
+    action: 'adjustVolume',
+    inc: cmd.inc,
+  };
+
+  return await post(data);
+}
+
+async function clear(cmd, device) {
+  const data = {
+    action: 'clear',
+  };
+
+  return await post(data);
+}
+
 async function setVolume(cmd, device) {
   const data = {
     action: 'setVolume',
     value: cmd.value,
-    ipAddress: device.ipAddress,
   };
 
   return await post(data);
@@ -72,11 +85,11 @@ async function setVolume(cmd, device) {
 async function togglePlay(cmd, device) {
   const data = {
     action: 'togglePlay',
-    ipAddress: device.ipAddress,
   };
 
   return await post(data);
 }
+*/
 
 async function post(data) {
   const url = `${process.env.API_HOST}/sonos/`;

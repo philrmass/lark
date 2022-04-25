@@ -1,7 +1,7 @@
 import { Link } from 'preact-router/match';
 
 import { toTime } from '../utilities/display';
-import { clear } from '../utilities/commands';
+import { clearQueue } from '../utilities/actions';
 import styles from './QueueStatus.module.css';
 
 export default function QueueStatus({ queue, index, exec }) {
@@ -22,7 +22,7 @@ export default function QueueStatus({ queue, index, exec }) {
         <div>{`${queue.length} songs`}</div>
         <div>{buildDuration()}</div>
         <div>{buildNext()}</div>
-        <button className='button' onClick={() => exec(clear())}>
+        <button className='button' onClick={() => exec(clearQueue())}>
           Clear
         </button>
       </div>

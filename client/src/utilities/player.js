@@ -1,15 +1,18 @@
-export async function exec(cmd, player) {
+export async function exec(cmds, player) {
   const commands = {
     adjustVolume,
     queueSong,
     setVolume,
     togglePlay,
   };
+  await console.log('EXEC-PLAYER', cmds, typeof player, typeof commands);
 
+  /*
   const fail = (cmd) => console.error(`Unknown command [${cmd.type}]`);
   const action = commands[cmd.type] ?? fail;
 
   return await action(cmd, player);
+  */
 }
 
 function adjustVolume(cmd, player) {

@@ -8,6 +8,8 @@ export default function Output({ devices, output, setOutput }) {
   const devicesList = [local, ...sorted];
 
   function handleDeviceChange(e) {
+    //??? change setOutput to an action
+    //??? sync queue after device is set
     if (e.target.value === local.id) {
       setOutput(null);
     } else {

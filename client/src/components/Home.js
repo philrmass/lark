@@ -19,6 +19,7 @@ export default function Home({
   entries,
   queue,
   index,
+  playing,
   output,
   song,
   exec,
@@ -30,7 +31,8 @@ export default function Home({
     <>
       <div className={styles.fixed}>
         <div className={styles.header}>
-          <Player song={song} exec={exec} />
+          <Player song={song} playing={playing} exec={exec} />
+          {playing ? 'playing' : 'NOT playing'}
           <div className={styles.output}>
             <Output devices={devices} output={output} setOutput={setOutput} />
           </div>
