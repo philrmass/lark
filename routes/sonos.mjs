@@ -47,12 +47,11 @@ export async function postAction(ctx) {
 
       try {
         for (const cmd of data.cmds) {
-          console.log(`CMD ${JSON.stringify(cmd, null, 2)}`);
           await action(cmd, device);
         }
         status = await getStatus(device);
       } catch (err) {
-        console.log('ERR', err);
+        console.error('postAction error:', err);
         error = err;
       }
 
@@ -71,8 +70,10 @@ function action(cmd, device) {
       return add(cmd, device);
     case 'play':
       return play(cmd, device);
+    case 'select':
+      return select(cmd, device);
     default:
-      return console.log(`Unknown command [${cmd.type}]`);
+      return console.warn(`Unknown command [${cmd.type}]`);
   }
 }
 
@@ -86,15 +87,20 @@ async function add(cmd, device) {
 }
 
 async function play(cmd, device) {
+  await device.play();
+
+  console.log('play');
+}
+
+async function select(cmd, device) {
+  console.log(`SEL '${cmd.index} ${Number.isInteger(cmd.index)}`);
   if (Number.isInteger(cmd.index)) {
     const index = cmd.index + 1;
     await device.selectTrack(index);
+
+    const current = await device.currentTrack();
+    console.log(`select '${current.title}' at ${current.queuePosition}`);
   }
-
-  await device.play();
-
-  const current = await device.currentTrack();
-  console.log(`play '${current.title}' at ${current.queuePosition}`);
 }
 
 async function getStatus(device) {

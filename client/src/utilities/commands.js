@@ -36,7 +36,8 @@ function queueSong(action, state) {
   const cmds = [{ type: 'add', song: action.song, index }];
 
   if (action.play && !state.playing) {
-    cmds.push({ type: 'play', index });
+    cmds.push({ type: 'select', index });
+    cmds.push({ type: 'play' });
   }
 
   return cmds;

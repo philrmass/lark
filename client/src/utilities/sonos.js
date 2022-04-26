@@ -12,7 +12,7 @@ export async function exec(cmds, device) {
 
   return {
     ...result,
-    queue: convertQueue(result.queue),
+    sonosQueue: convertQueue(result.queue),
   };
 }
 
@@ -21,6 +21,7 @@ function convertCommand(cmd) {
     case 'add':
       return convertAdd(cmd);
     case 'play':
+    case 'select':
       return cmd;
     default:
       console.error(`Unknown command [${cmd.type}]`);

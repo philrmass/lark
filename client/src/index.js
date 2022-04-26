@@ -1,3 +1,9 @@
+//??? queueSong > [select(index), play], remove play index
+//??? togglePlay > pause > pause
+//??? clearQueue > remove(all) > remove(all)
+//??? adjustVolume > setVolume(volume) setVolume(volume)
+//??? syncQueue > [remove(all), add(song, index) x N, select(index), play]
+
 //??? reimplement play/pause on sonos
 //??? reimplement adjustVolume => setVolume on sonos
 //??? implement remove on sonos
