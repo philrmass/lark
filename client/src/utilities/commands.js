@@ -1,11 +1,11 @@
 // Basic functions
 // - add (song, index)
-// - remove (index)
-// - removeAll
-// - setVolume (level)
 // - getVolume
-// - play (index = current)
+// - play
 // - pause
+// - remove (index, all)
+// - select (index)
+// - setVolume (level)
 
 export function translateAction(action, state) {
   switch (action.type) {
@@ -13,15 +13,18 @@ export function translateAction(action, state) {
       return clearQueue(action, state);
     case 'queueSong':
       return queueSong(action, state);
+    case 'syncQueue':
+      return syncQueue(action, state);
+    case 'togglePlay':
+      return togglePlay(action, state);
     default:
+      console.warn('UNKNOWN ACTION', action.type);
       return [];
   }
 }
 
-function clearQueue(action, state) {
-  const indices = [...Array(state.queue.length).keys()].reverse();
-  const filtered = indices.filter(index => !state.playing || index !== state.index);
-  return filtered.map(index => ({ type: 'remove', index }));
+function clearQueue() {
+  return [{ type: 'remove', all: true }];
 }
 
 function queueSong(action, state) {
@@ -41,4 +44,27 @@ function queueSong(action, state) {
   }
 
   return cmds;
+}
+
+function syncQueue(_action, state) {
+  const remove = { type: 'remove', all: true };
+  const adds = state.queue.map(song => ({ type: 'add', song, index: -1 }));
+  //const select = { type: 'select', index: state.index };
+  const cmds = [remove, ...adds];//, select];
+
+  /*
+  if (state.playing) {
+    cmds.push({ type: 'play' });
+  }
+  */
+
+  return cmds;
+}
+
+function togglePlay(action, state) {
+  if (state.playing) {
+    return [{ type: 'pause' }];
+  }
+
+  return [{ type: 'play' }];
 }

@@ -68,8 +68,12 @@ function action(cmd, device) {
   switch (cmd.type) {
     case 'add':
       return add(cmd, device);
+    case 'pause':
+      return pause(cmd, device);
     case 'play':
       return play(cmd, device);
+    case 'remove':
+      return remove(cmd, device);
     case 'select':
       return select(cmd, device);
     default:
@@ -86,14 +90,32 @@ async function add(cmd, device) {
   console.log(`add' '...${url.slice(-50)}' at ${index}`);
 }
 
+async function pause(cmd, device) {
+  await device.pause();
+
+  console.log('pause');
+}
+
 async function play(cmd, device) {
   await device.play();
 
   console.log('play');
 }
 
+async function remove(cmd, device) {
+  console.log(`REM (${cmd.index}) ${Number.isInteger(cmd.index)}`);
+  if (cmd.all) {
+    await device.flush();
+    console.log('remove all');
+  } else if (Number.isInteger(cmd.index)) {
+    const index = cmd.index + 1;
+    await device.removeTracksFromQueue(index, 1);
+    console.log(' IDX', index);
+  }
+}
+
 async function select(cmd, device) {
-  console.log(`SEL '${cmd.index} ${Number.isInteger(cmd.index)}`);
+  console.log(`SEL (${cmd.index}) ${Number.isInteger(cmd.index)}`);
   if (Number.isInteger(cmd.index)) {
     const index = cmd.index + 1;
     await device.selectTrack(index);
@@ -105,10 +127,12 @@ async function select(cmd, device) {
 
 async function getStatus(device) {
   const queue = await device.getQueue();
-  const sonosQueue = queue.items.map(item => ({ url: item.uri }));
+  const items = queue.items ?? [];
+  const sonosQueue = items.map(item => ({ url: item.uri }));
 
   const state = await device.getCurrentState();
-  const playing = state !== 'paused';
+  const playing = state !== 'paused' && state !== 'stopped';
+  console.log('STATE', state);
 
   return {
     sonosQueue,
@@ -117,7 +141,6 @@ async function getStatus(device) {
 }
 
 // ??? unused commands
-//await device.flush();
 //await device.adjustVolume(inc);
 //const volume = await device.getVolume();
 //await device.togglePlayback();

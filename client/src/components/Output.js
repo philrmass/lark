@@ -1,19 +1,27 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
+
+import { syncQueue } from '../utilities/actions';
 import styles from './Output.module.css';
 
-export default function Output({ devices, output, setOutput }) {
+export default function Output({ devices, output, inSync, exec, setOutput }) {
   const dialogRef = useRef(null);
   const sorted = Object.values(devices).sort((a, b) => a.name < b.name ? -1 : 1);
   const local = { name: 'Local', id: undefined };
   const devicesList = [local, ...sorted];
 
+  useEffect(() => {
+    if (!inSync) {
+      exec(syncQueue());
+    }
+  }, [inSync, exec]);
+
   function handleDeviceChange(e) {
     //??? change setOutput to an action
-    //??? sync queue after device is set
     if (e.target.value === local.id) {
       setOutput(null);
     } else {
       setOutput(devices[e.target.value]);
+      exec(syncQueue());
     }
     dialogRef.current.close();
   }

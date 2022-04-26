@@ -22,6 +22,7 @@ export default function Home({
   playing,
   output,
   song,
+  inSync,
   exec,
   setOutput,
 }) {
@@ -34,7 +35,7 @@ export default function Home({
           <Player song={song} playing={playing} exec={exec} />
           {playing ? 'playing' : 'NOT playing'}
           <div className={styles.output}>
-            <Output devices={devices} output={output} setOutput={setOutput} />
+            <Output devices={devices} output={output} inSync={inSync} exec={exec} setOutput={setOutput} />
           </div>
         </div>
         <QueueStatus queue={queue} index={index} exec={exec} />

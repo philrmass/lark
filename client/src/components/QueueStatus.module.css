@@ -2,8 +2,20 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: var(--size2);
   padding: var(--size2);
   border-top: var(--border);
   background: var(--bg-lt-gray);
   color: var(--text-lt);
+}
+
+.status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--size2);
+}
+
+.next {
+  flex-grow: 1;
 }

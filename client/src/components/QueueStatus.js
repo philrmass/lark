@@ -17,15 +17,17 @@ export default function QueueStatus({ queue, index, exec }) {
   }
 
   return (
-    <Link href={'/queue'}>
-      <div className={styles.main}>
-        <div>{`${queue.length} songs`}</div>
-        <div>{buildDuration()}</div>
-        <div>{buildNext()}</div>
-        <button className='button' onClick={() => exec(clearQueue())}>
-          Clear
-        </button>
-      </div>
-    </Link>
+    <div className={styles.main}>
+      <Link href={'/queue'}>
+        <div className={styles.status}>
+          <div>{`${queue.length} songs`}</div>
+          <div>{buildDuration()}</div>
+          <div className={styles.next}>{buildNext()}</div>
+        </div>
+      </Link>
+      <button className='button' onClick={() => exec(clearQueue())}>
+        Clear
+      </button>
+    </div>
   );
 }

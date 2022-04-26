@@ -8,7 +8,7 @@ export async function exec(cmds, device) {
   };
 
   const result = await post(data);
-  await console.log('EXEC-SONOS\ndata', data, '\nresult', result);
+  await console.log('SONOS', data.cmds.map(cmd => cmd.type));
 
   return {
     ...result,
@@ -20,11 +20,13 @@ function convertCommand(cmd) {
   switch (cmd.type) {
     case 'add':
       return convertAdd(cmd);
+    case 'pause':
     case 'play':
+    case 'remove':
     case 'select':
       return cmd;
     default:
-      console.error(`Unknown command [${cmd.type}]`);
+      console.warn(`Unknown command [${cmd.type}]`);
       return null;
   }
 }

@@ -1,20 +1,11 @@
-//??? queueSong > [select(index), play], remove play index
-//??? togglePlay > pause > pause
-//??? clearQueue > remove(all) > remove(all)
 //??? adjustVolume > setVolume(volume) setVolume(volume)
+//??? make clicking queue status a toggle, all area but clear
+//
 //??? syncQueue > [remove(all), add(song, index) x N, select(index), play]
-
-//??? reimplement play/pause on sonos
-//??? reimplement adjustVolume => setVolume on sonos
-//??? implement remove on sonos
-
-//??? make queue status a toggle switch, without clear activating it
-//??? sync up queue with sonos
-
-//??? deploy to server
-
 //??? sync queue on device change
 //??? sync queue on mismatch in update
+
+//??? deploy to server
 
 //??? add by-letter quick scroll on right-side
 //??? add volume display
@@ -34,7 +25,7 @@ import { useEffect, useRef, useState } from 'preact/hooks';
 
 import { translateAction } from './utilities/commands';
 import { exec as execPlayer } from './utilities/player';
-import { exec as execQueue } from './utilities/queue';
+import { exec as execQueue, areQueuesInSync } from './utilities/queue';
 import { exec as execSonos } from './utilities/sonos';
 import { get } from './utilities/network';
 import { useLocalStorage } from './utilities/storage';
@@ -52,6 +43,7 @@ export default function App() {
   const [output, setOutput] = useLocalStorage('larkOutput', false);
   const [song, setSong] = useLocalStorage('larkSong', null);
   const [playing, setPlaying] = useState(false);
+  const [inSync, setInSync] = useState(true); //??? (false);
 
   useEffect(() => {
     console.log(`Starting '${process.env.NODE_ENV}' with host '${process.env.API_HOST}'`);
@@ -77,26 +69,28 @@ export default function App() {
   }
 
   function update(result) {
-    if (result?.song) {
-      console.log('UPDATE song', result.song);
-      setSong(result.song);
-    }
-    if (result?.index) {
-      setIndex(result.index);
-      console.log('UPDATE index', result.index);
-    }
-    if (result?.playing) {
-      setPlaying(result.playing);
-      console.log('UPDATE playing', result.playing);
-    }
-    if (result?.queue) {
-      setQueue(result.queue);
-      console.log('UPDATE queue', result.queue);
-    }
-    if (result?.sonosQueue) {
-      console.warn('IMPLEMENT sonosQueue', result.sonosQueue);
-      //??? compare result queue[x].path to local queue[y].path
-      //??? sync queue if mismatch
+    const keys = Object.keys(result);
+    for (const key of keys) {
+      if (key === 'song') {
+        console.log('UPDATE song', result.song);
+        setSong(result.song);
+      }
+      if (key === 'index') {
+        setIndex(result.index);
+        console.log('UPDATE index', result.index);
+      }
+      if (key === 'playing') {
+        setPlaying(result.playing);
+        console.log('UPDATE playing', result.playing);
+      }
+      if (key === 'queue') {
+        setQueue(result.queue);
+        console.log('UPDATE queue', result.queue);
+      }
+      if (key === 'sonosQueue') {
+        setInSync(areQueuesInSync(result.sonosQueue, queue));
+        console.log('UPDATE sonosQueue', inSync, result.sonosQueue);
+      }
     }
   }
 
@@ -111,6 +105,7 @@ export default function App() {
         playing={playing}
         output={output}
         song={song}
+        inSync={inSync}
         exec={exec}
         setOutput={setOutput}
       />
