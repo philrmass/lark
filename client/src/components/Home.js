@@ -22,6 +22,7 @@ export default function Home({
   playing,
   output,
   song,
+  volume,
   inSync,
   exec,
   setOutput,
@@ -33,7 +34,7 @@ export default function Home({
       <div className={styles.fixed}>
         <div className={styles.header}>
           <Player song={song} playing={playing} exec={exec} />
-          {playing ? 'playing' : 'NOT playing'}
+          <div>{`[${volume}]`}</div>
           <div className={styles.output}>
             <Output devices={devices} output={output} inSync={inSync} exec={exec} setOutput={setOutput} />
           </div>

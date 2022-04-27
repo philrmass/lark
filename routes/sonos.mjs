@@ -76,6 +76,8 @@ function action(cmd, device) {
       return remove(cmd, device);
     case 'select':
       return select(cmd, device);
+    case 'setVolume':
+      return setVolume(cmd, device);
     default:
       return console.warn(`Unknown command [${cmd.type}]`);
   }
@@ -125,6 +127,11 @@ async function select(cmd, device) {
   }
 }
 
+async function setVolume(cmd, device) {
+  await device.setVolume(cmd.volume);
+  console.log(`setVolume (${cmd.volume})`);
+}
+
 async function getStatus(device) {
   const queue = await device.getQueue();
   const items = queue.items ?? [];
@@ -132,36 +139,22 @@ async function getStatus(device) {
 
   const state = await device.getCurrentState();
   const playing = state !== 'paused' && state !== 'stopped';
-  console.log('STATE', state);
+  const volume = await device.getVolume();
 
   return {
     sonosQueue,
     playing,
+    volume,
   };
 }
 
 // ??? unused commands
-//await device.adjustVolume(inc);
-//const volume = await device.getVolume();
-//await device.togglePlayback();
-//await device.pause();
-//queueNext(uri);
 //seek(seconds);
+//getAllGroups();
+//joinGroup(otherDeviceName)
 //leaveGroup()
 //next()
 //previous()
-//joinGroup(otherDeviceName)
-//const groups = await device.getAllGroups();
-
-/*
-async function setVolume(device, value) {
-  await device.setVolume(value);
-
-  const volume = await device.getVolume();
-  console.log(`setVolume (${volume})`);
-  return { volume };
-}
-*/
 
 /*
 async function run() {

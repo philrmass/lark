@@ -24,6 +24,7 @@ function convertCommand(cmd) {
     case 'play':
     case 'remove':
     case 'select':
+    case 'setVolume':
       return cmd;
     default:
       console.warn(`Unknown command [${cmd.type}]`);
@@ -57,42 +58,6 @@ function getPath(url) {
 
   return null;
 }
-
-/*
-async function adjustVolume(cmd, device) {
-  const data = {
-    action: 'adjustVolume',
-    inc: cmd.inc,
-  };
-
-  return await post(data);
-}
-
-async function clear(cmd, device) {
-  const data = {
-    action: 'clear',
-  };
-
-  return await post(data);
-}
-
-async function setVolume(cmd, device) {
-  const data = {
-    action: 'setVolume',
-    value: cmd.value,
-  };
-
-  return await post(data);
-}
-
-async function togglePlay(cmd, device) {
-  const data = {
-    action: 'togglePlay',
-  };
-
-  return await post(data);
-}
-*/
 
 async function post(data) {
   const url = `${process.env.API_HOST}/sonos/`;

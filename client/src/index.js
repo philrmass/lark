@@ -1,4 +1,3 @@
-//??? adjustVolume > setVolume(volume) setVolume(volume)
 //??? make clicking queue status a toggle, all area but clear
 //
 //??? syncQueue > [remove(all), add(song, index) x N, select(index), play]
@@ -43,6 +42,7 @@ export default function App() {
   const [output, setOutput] = useLocalStorage('larkOutput', false);
   const [song, setSong] = useLocalStorage('larkSong', null);
   const [playing, setPlaying] = useState(false);
+  const [volume, setVolume] = useState(20);
   const [inSync, setInSync] = useState(true); //??? (false);
 
   useEffect(() => {
@@ -56,7 +56,7 @@ export default function App() {
   }, [setArtists, setDevices, setEntries, setOutput]);
 
   async function exec(action) {
-    const state = { index, playing, queue };
+    const state = { index, playing, queue, volume };
     const cmds = translateAction(action, state);
 
     update(execQueue(cmds, queue));
@@ -74,22 +74,19 @@ export default function App() {
       if (key === 'song') {
         console.log('UPDATE song', result.song);
         setSong(result.song);
-      }
-      if (key === 'index') {
+      } else if (key === 'index') {
         setIndex(result.index);
         console.log('UPDATE index', result.index);
-      }
-      if (key === 'playing') {
+      } else if (key === 'playing') {
         setPlaying(result.playing);
-        console.log('UPDATE playing', result.playing);
-      }
-      if (key === 'queue') {
-        setQueue(result.queue);
+      } else if (key === 'queue') {
         console.log('UPDATE queue', result.queue);
-      }
-      if (key === 'sonosQueue') {
+        setQueue(result.queue);
+      } else if (key === 'sonosQueue') {
+        console.log('UPDATE sonosQueue', result.sonosQueue);
         setInSync(areQueuesInSync(result.sonosQueue, queue));
-        console.log('UPDATE sonosQueue', inSync, result.sonosQueue);
+      } else if (key === 'volume') {
+        setVolume(result.volume);
       }
     }
   }
@@ -105,6 +102,7 @@ export default function App() {
         playing={playing}
         output={output}
         song={song}
+        volume={volume}
         inSync={inSync}
         exec={exec}
         setOutput={setOutput}

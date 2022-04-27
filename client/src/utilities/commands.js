@@ -1,14 +1,11 @@
-// Basic functions
-// - add (song, index)
-// - getVolume
-// - play
-// - pause
-// - remove (index, all)
-// - select (index)
-// - setVolume (level)
+// ??? functions to add
+// - getStatus [on device choose]
+// - remove (index)
 
 export function translateAction(action, state) {
   switch (action.type) {
+    case 'adjustVolume':
+      return adjustVolume(action, state);
     case 'clearQueue':
       return clearQueue(action, state);
     case 'queueSong':
@@ -18,9 +15,15 @@ export function translateAction(action, state) {
     case 'togglePlay':
       return togglePlay(action, state);
     default:
-      console.warn('UNKNOWN ACTION', action.type);
+      console.warn(`Unknown action '${action.type}'`);
       return [];
   }
+}
+
+function adjustVolume(action, state) {
+  const volume = state.volume + action.inc;
+
+  return [{ type: 'setVolume', volume }];
 }
 
 function clearQueue() {

@@ -8,7 +8,7 @@ export default function Player({ song, playing, exec }) {
 
   return (
     <div className={styles.main}>
-      <button className={playClasses} onClick={() => exec(togglePlay())}>{playing ? 'S' : 'P'}</button>
+      <button className={playClasses} onClick={() => exec(togglePlay())}>{playing ? '||' : '>'}</button>
       <div className={styles.volume}>
         <button className={adjustClasses} onClick={() => exec(adjustVolume(+1))}>+</button>
         <button className={adjustClasses} onClick={() => exec(adjustVolume(-1))}>-</button>
