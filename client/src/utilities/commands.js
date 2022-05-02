@@ -51,17 +51,10 @@ function queueSong(action, state) {
 
 function syncQueue(_action, state) {
   const remove = { type: 'remove', all: true };
-  const adds = state.queue.map(song => ({ type: 'add', song, index: -1 }));
-  //const select = { type: 'select', index: state.index };
-  const cmds = [remove, ...adds];//, select];
+  const adds = state.queue.map((song, index) => ({ type: 'add', song, index }));
+  const select = { type: 'select', index: state.index };
 
-  /*
-  if (state.playing) {
-    cmds.push({ type: 'play' });
-  }
-  */
-
-  return cmds;
+  return [remove, ...adds, select];
 }
 
 function togglePlay(action, state) {

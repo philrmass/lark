@@ -28,13 +28,9 @@ export function setVolume(value) {
 }
 
 export function syncQueue() {
-  console.log('syncQueue');
-  return {};
-  /*
   return {
     type: 'syncQueue',
   };
-  */
 }
 
 export function togglePlay() {

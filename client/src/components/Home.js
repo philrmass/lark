@@ -23,9 +23,8 @@ export default function Home({
   output,
   song,
   volume,
-  inSync,
   exec,
-  setOutput,
+  changeOutput,
 }) {
   const [content, setContent] = useState(null);
 
@@ -36,7 +35,7 @@ export default function Home({
           <Player song={song} playing={playing} exec={exec} />
           <div>{`[${volume}]`}</div>
           <div className={styles.output}>
-            <Output devices={devices} output={output} inSync={inSync} exec={exec} setOutput={setOutput} />
+            <Output devices={devices} output={output} changeOutput={changeOutput} />
           </div>
         </div>
         <QueueStatus queue={queue} index={index} exec={exec} />

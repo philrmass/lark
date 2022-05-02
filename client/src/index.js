@@ -1,8 +1,6 @@
+//??? fix syncQueue order
 //??? make clicking queue status a toggle, all area but clear
-//
-//??? syncQueue > [remove(all), add(song, index) x N, select(index), play]
-//??? sync queue on device change
-//??? sync queue on mismatch in update
+//??? restore song status
 
 //??? deploy to server
 
@@ -22,9 +20,10 @@
 //??? add spinner
 import { useEffect, useRef, useState } from 'preact/hooks';
 
+import { syncQueue } from './utilities/actions';
 import { translateAction } from './utilities/commands';
 import { exec as execPlayer } from './utilities/player';
-import { exec as execQueue, areQueuesInSync } from './utilities/queue';
+import { exec as execQueue } from './utilities/queue';
 import { exec as execSonos } from './utilities/sonos';
 import { get } from './utilities/network';
 import { useLocalStorage } from './utilities/storage';
@@ -43,7 +42,6 @@ export default function App() {
   const [song, setSong] = useLocalStorage('larkSong', null);
   const [playing, setPlaying] = useState(false);
   const [volume, setVolume] = useState(20);
-  const [inSync, setInSync] = useState(true); //??? (false);
 
   useEffect(() => {
     console.log(`Starting '${process.env.NODE_ENV}' with host '${process.env.API_HOST}'`);
@@ -55,14 +53,20 @@ export default function App() {
     });
   }, [setArtists, setDevices, setEntries, setOutput]);
 
-  async function exec(action) {
+  function changeOutput(device) {
+    //??? store last device playing
+    setOutput(device);
+    exec(syncQueue(), device);
+  }
+
+  async function exec(action, device = output) {
     const state = { index, playing, queue, volume };
     const cmds = translateAction(action, state);
 
     update(execQueue(cmds, queue));
 
-    if (output) {
-      update(await execSonos(cmds, output));
+    if (device) {
+      update(await execSonos(cmds, device));
     } else {
       update(await execPlayer(cmds, playerRef.current));
     }
@@ -80,11 +84,10 @@ export default function App() {
       } else if (key === 'playing') {
         setPlaying(result.playing);
       } else if (key === 'queue') {
-        console.log('UPDATE queue', result.queue);
+        //console.log('UPDATE queue', result.queue);
         setQueue(result.queue);
       } else if (key === 'sonosQueue') {
-        console.log('UPDATE sonosQueue', result.sonosQueue);
-        setInSync(areQueuesInSync(result.sonosQueue, queue));
+        //console.log('UPDATE sonosQueue', result.sonosQueue, queue);
       } else if (key === 'volume') {
         setVolume(result.volume);
       }
@@ -103,9 +106,8 @@ export default function App() {
         output={output}
         song={song}
         volume={volume}
-        inSync={inSync}
         exec={exec}
-        setOutput={setOutput}
+        changeOutput={changeOutput}
       />
       <audio ref={playerRef} />
     </>
