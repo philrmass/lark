@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Router from 'preact-router';
+import Router, { route } from 'preact-router';
 
 import styles from './Home.module.css';
 import Album from './Album';
@@ -28,6 +28,21 @@ export default function Home({
 }) {
   const [content, setContent] = useState(null);
 
+  function toggleQueue() {
+    const queuePath = '/queue';
+    const isShown = window.location.pathname === queuePath;
+
+    if (isShown) {
+      if (window.history.length > 0) {
+        window.history.back();
+      } else {
+        route('/', true);
+      }
+    } else {
+      route(queuePath);
+    }
+  }
+
   return (
     <>
       <div className={styles.fixed}>
@@ -38,7 +53,12 @@ export default function Home({
             <Output devices={devices} output={output} changeOutput={changeOutput} />
           </div>
         </div>
-        <QueueStatus queue={queue} index={index} exec={exec} />
+        <QueueStatus
+          queue={queue}
+          index={index}
+          exec={exec}
+          toggleQueue={toggleQueue}
+        />
         <Breadcrumbs entry={content} />
       </div>
       <div className={styles.content}>
@@ -46,7 +66,14 @@ export default function Home({
           <Artists path='/' artists={artists} setContent={setContent} />
           <Artist path='/artists/:guid' entries={entries} setContent={setContent} />
           <Album path='/albums/:guid' entries={entries} exec={exec} setContent={setContent} />
-          <Queue path='/queue' queue={queue} setContent={setContent} />
+          <Queue
+            path='/queue'
+            queue={queue}
+            index={index}
+            playing={playing}
+            setContent={setContent}
+            toggleQueue={toggleQueue}
+          />
           <Song path='/songs/:guid' entries={entries} exec={exec} setContent={setContent} />
           <NotFound default />
         </Router>

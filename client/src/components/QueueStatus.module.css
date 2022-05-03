@@ -1,19 +1,23 @@
 .main {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  gap: var(--size2);
-  padding: var(--size2);
   border-top: var(--border);
   background: var(--bg-lt-gray);
   color: var(--text-lt);
+  user-select: none;
 }
 
 .status {
+  flex-grow: 1;
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: var(--size2);
+  padding: var(--size2);
+}
+
+.buttons {
+  padding: var(--size2);
 }
 
 .next {

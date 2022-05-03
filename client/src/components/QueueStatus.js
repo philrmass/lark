@@ -1,10 +1,13 @@
-import { Link } from 'preact-router/match';
-
 import { toTime } from '../utilities/display';
 import { clearQueue } from '../utilities/actions';
 import styles from './QueueStatus.module.css';
 
-export default function QueueStatus({ queue, index, exec }) {
+export default function QueueStatus({
+  queue,
+  index,
+  exec,
+  toggleQueue,
+}) {
   function buildDuration() {
     const total = queue.reduce((total, song) => total + song.duration, 0);
     return `${toTime(total)}`;
@@ -18,16 +21,16 @@ export default function QueueStatus({ queue, index, exec }) {
 
   return (
     <div className={styles.main}>
-      <Link href={'/queue'}>
-        <div className={styles.status}>
-          <div>{`${queue.length} songs`}</div>
-          <div>{buildDuration()}</div>
-          <div className={styles.next}>{buildNext()}</div>
-        </div>
-      </Link>
-      <button className='button' onClick={() => exec(clearQueue())}>
-        Clear
-      </button>
+      <div className={styles.status} onClick={toggleQueue}>
+        <div>{`${queue.length} songs`}</div>
+        <div>{buildDuration()}</div>
+        <div className={styles.next}>{buildNext()}</div>
+      </div>
+      <div className={styles.buttons}>
+        <button className='button' onClick={() => exec(clearQueue())}>
+          Clear
+        </button>
+      </div>
     </div>
   );
 }

@@ -1,5 +1,6 @@
-//??? fix syncQueue order
 //??? make clicking queue status a toggle, all area but clear
+//??? improve queue visuals
+//??? sonos server actions return keys
 //??? restore song status
 
 //??? deploy to server

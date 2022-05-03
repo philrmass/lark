@@ -1,3 +1,18 @@
 .main {
-  background: #efd;
+}
+
+.status {
+  display: inline-block;
+  width: 1em;
+  margin-right: var(--size1);
+}
+
+.song {
+  padding: var(--size1) var(--size2);
+  font-size: var(--text-med);
+}
+
+.duration {
+  margin-left: var(--size2);
+  color: var(--text-lt);
 }
