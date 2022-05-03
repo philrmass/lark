@@ -1,5 +1,7 @@
-//??? sonos server actions return keys
-//??? restore song status
+//??? get song from queue and index
+//??? add time display and volume control
+//??? add Next:
+//??? add next and prev buttons
 
 //??? deploy to server
 
@@ -86,7 +88,7 @@ export default function App() {
       } else if (key === 'queue') {
         setQueue(result.queue);
       } else if (key === 'sonosQueue') {
-        console.log(`__sonosQueue__(${result.sonosQueue.length})`);
+        console.log(`__sonosQueue__(${result.sonosQueue?.length})`);
       } else if (key === 'volume') {
         setVolume(result.volume);
       }

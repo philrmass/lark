@@ -10,10 +10,11 @@ export async function exec(cmds, device) {
   const result = await post(data);
   await console.log(`SONOS (${device?.name})`, data.cmds.map(cmd => cmd.type));
 
-  return {
-    ...result,
-    sonosQueue: convertQueue(result.sonosQueue),
-  };
+  if (result.sonosQueue) {
+    result.sonosQueue = convertQueue(result.sonosQueue);
+  }
+
+  return result;
 }
 
 function convertCommand(cmd) {

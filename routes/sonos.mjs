@@ -44,12 +44,15 @@ export async function postAction(ctx) {
 
     if (data.ipAddress) {
       const device = new Sonos(data.ipAddress);
+      let keys = {};
 
       try {
         for (const cmd of data.cmds) {
-          await action(cmd, device);
+          const actionKeys = await action(cmd, device) ?? {};
+          keys = { ...keys, ...actionKeys };
         }
-        status = await getStatus(device);
+
+        status = await getStatus(keys, device);
       } catch (err) {
         console.error('postAction error:', err);
         error = err;
@@ -90,18 +93,21 @@ async function add(cmd, device) {
   await device.queue(url, index);
 
   console.log(`add' '...${url.slice(-50)}' at ${index}`);
+  return { sonosQueue: true };
 }
 
 async function pause(cmd, device) {
   await device.pause();
 
   console.log('pause');
+  return { playing: true };
 }
 
 async function play(cmd, device) {
   await device.play();
 
   console.log('play');
+  return { playing: true };
 }
 
 async function remove(cmd, device) {
@@ -114,6 +120,8 @@ async function remove(cmd, device) {
     await device.removeTracksFromQueue(index, 1);
     console.log(' IDX', index);
   }
+
+  return { sonosQueue: true };
 }
 
 async function select(cmd, device) {
@@ -124,28 +132,42 @@ async function select(cmd, device) {
 
     const current = await device.currentTrack();
     console.log(`select '${current.title}' at ${current.queuePosition}`);
+
+    return { index: true };
   }
 }
 
 async function setVolume(cmd, device) {
   await device.setVolume(cmd.volume);
   console.log(`setVolume (${cmd.volume})`);
+
+  return { volume: true };
 }
 
-async function getStatus(device) {
-  const queue = await device.getQueue();
-  const items = queue.items ?? [];
-  const sonosQueue = items.map(item => ({ url: item.uri }));
+async function getStatus(toSend, device) {
+  const keys = Object.keys(toSend);
+  const values = await Promise.all(keys.map(async (key) => {
+    if (key === 'volume') {
+      const current = await device.currentTrack();
+      console.log('CURR', current);
+      return await device.getVolume();
+    } else if (key === 'playing') {
+      const state = await device.getCurrentState();
+      return state !== 'paused' && state !== 'stopped';
+    } else if (key === 'index') {
+      const current = await device.currentTrack();
+      return current.queuePosition - 1;
+    } else if (key === 'sonosQueue') {
+      const queue = await device.getQueue();
+      const items = queue.items ?? [];
+      return items.map(item => ({ url: item.uri }));
+    }
+  }));
 
-  const state = await device.getCurrentState();
-  const playing = state !== 'paused' && state !== 'stopped';
-  const volume = await device.getVolume();
-
-  return {
-    sonosQueue,
-    playing,
-    volume,
-  };
+  return keys.reduce((obj, key, index) => ({
+    ...obj,
+    [key]: values[index],
+  }), {});
 }
 
 // ??? unused commands
