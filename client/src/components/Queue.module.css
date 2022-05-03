@@ -1,4 +1,10 @@
 .main {
+  display: flex;
+}
+
+.songs {
+  padding-top: var(--size2);
+  flex-grow: 1;
 }
 
 .status {
@@ -16,3 +22,8 @@
   margin-left: var(--size2);
   color: var(--text-lt);
 }
+
+.buttons {
+  padding: var(--size2);
+}
+

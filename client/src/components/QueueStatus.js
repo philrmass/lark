@@ -22,9 +22,9 @@ export default function QueueStatus({
   return (
     <div className={styles.main}>
       <div className={styles.status} onClick={toggleQueue}>
+        <div className={styles.next}>{buildNext()}</div>
         <div>{`${queue.length} songs`}</div>
         <div>{buildDuration()}</div>
-        <div className={styles.next}>{buildNext()}</div>
       </div>
       <div className={styles.buttons}>
         <button className='button' onClick={() => exec(clearQueue())}>

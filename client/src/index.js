@@ -1,5 +1,3 @@
-//??? make clicking queue status a toggle, all area but clear
-//??? improve queue visuals
 //??? sonos server actions return keys
 //??? restore song status
 
@@ -77,18 +75,18 @@ export default function App() {
     const keys = Object.keys(result);
     for (const key of keys) {
       if (key === 'song') {
-        console.log('UPDATE song', result.song);
+        console.log(`__song__(${result.song})`);
         setSong(result.song);
       } else if (key === 'index') {
+        console.log(`__index__(${result.index})`);
         setIndex(result.index);
-        console.log('UPDATE index', result.index);
       } else if (key === 'playing') {
+        console.log(`__playing__(${result.playing})`);
         setPlaying(result.playing);
       } else if (key === 'queue') {
-        //console.log('UPDATE queue', result.queue);
         setQueue(result.queue);
       } else if (key === 'sonosQueue') {
-        //console.log('UPDATE sonosQueue', result.sonosQueue, queue);
+        console.log(`__sonosQueue__(${result.sonosQueue.length})`);
       } else if (key === 'volume') {
         setVolume(result.volume);
       }

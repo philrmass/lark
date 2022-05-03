@@ -32,11 +32,11 @@ export default function Queue ({
 
   return (
     <div className={styles.main}>
+      <div className={styles.songs}>
+        {queue.map((song, index) => buildSong(song, index))}
+      </div>
       <div className={styles.buttons}>
         <button className='button' onClick={toggleQueue}>Back</button>
-      </div>
-      <div>
-        {queue.map((song, index) => buildSong(song, index))}
       </div>
     </div>
   );
