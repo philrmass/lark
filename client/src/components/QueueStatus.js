@@ -1,11 +1,15 @@
 import { toTime } from '../utilities/display';
 import { clearQueue } from '../utilities/actions';
 import styles from './QueueStatus.module.css';
+import Output from './Output';
 
 export default function QueueStatus({
+  devices,
+  output,
   queue,
   index,
   exec,
+  changeOutput,
   toggleQueue,
 }) {
   function buildDuration() {
@@ -13,20 +17,19 @@ export default function QueueStatus({
     return `${toTime(total)}`;
   }
 
-  function buildNext() {
-    if (index + 1 < queue.length) {
-      return `Next: ${queue[index + 1].title}`;
-    }
-  }
-
   return (
     <div className={styles.main}>
-      <div className={styles.status} onClick={toggleQueue}>
-        <div className={styles.next}>{buildNext()}</div>
-        <div>{`${queue.length} songs`}</div>
-        <div>{buildDuration()}</div>
+      <div className={styles.output}>
+        <Output devices={devices} output={output} changeOutput={changeOutput} />
       </div>
-      <div className={styles.buttons}>
+      <div className={styles.status} onClick={toggleQueue}>
+        <div>{`Next: ${queue[index + 1]?.title ?? ''}`}</div>
+        <div className={styles.numbers}>
+          <div>{`${queue.length} songs`}</div>
+          <div>{buildDuration()}</div>
+        </div>
+      </div>
+      <div className={styles.clear}>
         <button className='button' onClick={() => exec(clearQueue())}>
           Clear
         </button>

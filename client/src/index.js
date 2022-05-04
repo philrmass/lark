@@ -1,24 +1,22 @@
+//??? fix player layout
 //??? get song from queue and index
-//??? add time display and volume control
-//??? add Next:
-//??? add next and prev buttons
+//??? get time once per second while playing, interval hook
+//??? display elapsed and remaining time
+//??? connect next and prev buttons, set index
 
 //??? deploy to server
 
 //??? add by-letter quick scroll on right-side
-//??? add volume display
-//??? add time display
+//??? add volume bar
+//??? add time bar
 
 //??? add search
-//??? limit song title to X characters, add hover tooltip if longer
-
 //??? add duration to album data
 //??? add release date and duration display
 //??? add next song coordination
 //??? add art to album display
 
-//??? add env vars to api host
-//??? add spinner
+//??? add spinner during nexwork calls
 import { useEffect, useRef, useState } from 'preact/hooks';
 
 import { syncQueue } from './utilities/actions';

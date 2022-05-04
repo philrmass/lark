@@ -1,15 +1,3 @@
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--size2);
-  background: var(--bg-lt-gray);
-}
-
-.output {
-  flex-shrink: 0;
-}
-
 .fixed {
   position: sticky;
   top: 0;

@@ -1,3 +1,7 @@
+.main {
+  padding: var(--size2);
+}
+
 .dialog::backdrop {
   background: #00000080;
 }

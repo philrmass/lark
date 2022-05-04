@@ -7,7 +7,6 @@ import Artist from './Artist';
 import Artists from './Artists';
 import Breadcrumbs from './Breadcrumbs';
 import NotFound from './NotFound';
-import Output from './Output';
 import Player from './Player';
 import Queue from './Queue';
 import QueueStatus from './QueueStatus';
@@ -46,17 +45,20 @@ export default function Home({
   return (
     <>
       <div className={styles.fixed}>
-        <div className={styles.header}>
-          <Player song={song} playing={playing} exec={exec} />
-          <div>{`[${volume}]`}</div>
-          <div className={styles.output}>
-            <Output devices={devices} output={output} changeOutput={changeOutput} />
-          </div>
-        </div>
+        <Player
+          song={song}
+          playing={playing}
+          volume={volume}
+          exec={exec}
+        />
+
         <QueueStatus
+          devices={devices}
+          output={output}
           queue={queue}
           index={index}
           exec={exec}
+          changeOutput={changeOutput}
           toggleQueue={toggleQueue}
         />
         <Breadcrumbs entry={content} />

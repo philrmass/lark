@@ -1,20 +1,27 @@
 .main {
+  padding: var(--size2);
+  background: var(--bg-lt-gray);
+}
+
+.volume {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #def;
+}
+
+.controls {
+  margin: 4px 0;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
 }
 
-.play {
-  flex-shrink: 0;
-  width: 4em;
-  height: 4em;
-  margin-right: 4px;
-}
-
-.adjust {
-  width: 3em;
-  height: 2em;
-  display: block;
-  padding: 2px 0;
+.time {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #def;
 }
 
 .title {
