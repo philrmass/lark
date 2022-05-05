@@ -8,8 +8,12 @@ export function translateAction(action, state) {
       return adjustVolume(action, state);
     case 'clearQueue':
       return clearQueue(action, state);
+    case 'getTime':
+      return getTime(action, state);
     case 'queueSong':
       return queueSong(action, state);
+    case 'setVolume':
+      return setVolume(action, state);
     case 'syncQueue':
       return syncQueue(action, state);
     case 'togglePlay':
@@ -28,6 +32,10 @@ function adjustVolume(action, state) {
 
 function clearQueue() {
   return [{ type: 'remove', all: true }];
+}
+
+function getTime() {
+  return [{ type: 'getTime' }];
 }
 
 function queueSong(action, state) {
@@ -49,12 +57,20 @@ function queueSong(action, state) {
   return cmds;
 }
 
+function setVolume(action) {
+  return [{ type: 'setVolume', volume: action.volume }];
+}
+
 function syncQueue(_action, state) {
   const remove = { type: 'remove', all: true };
   const adds = state.queue.map((song, index) => ({ type: 'add', song, index }));
-  const select = { type: 'select', index: state.index };
+  const cmds = [remove, ...adds];
 
-  return [remove, ...adds, select];
+  if (state.index >= 0 && state.index < state.queue.length) {
+    cmds.push({ type: 'select', index: state.index });
+  }
+
+  return cmds;
 }
 
 function togglePlay(action, state) {

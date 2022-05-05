@@ -30,7 +30,7 @@ export default function QueueStatus({
         </div>
       </div>
       <div className={styles.clear}>
-        <button className='button' onClick={() => exec(clearQueue())}>
+        <button className='btn' onClick={() => exec(clearQueue())}>
           Clear
         </button>
       </div>

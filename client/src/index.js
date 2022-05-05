@@ -1,8 +1,7 @@
-//??? fix player layout
-//??? get song from queue and index
-//??? get time once per second while playing, interval hook
-//??? display elapsed and remaining time
-//??? connect next and prev buttons, set index
+//??? change getTime to setStatus, return time and index
+//??? fix time value display, move below
+//??? connect next and prev buttons -> set index if available
+//??? set volume before play?
 
 //??? deploy to server
 
@@ -13,14 +12,14 @@
 //??? add search
 //??? add duration to album data
 //??? add release date and duration display
-//??? add next song coordination
 //??? add art to album display
 
 //??? add spinner during nexwork calls
 import { useEffect, useRef, useState } from 'preact/hooks';
 
-import { syncQueue } from './utilities/actions';
+import { getTime, setVolume as setVol, syncQueue } from './utilities/actions';
 import { translateAction } from './utilities/commands';
+import { useInterval } from './utilities/hooks';
 import { exec as execPlayer } from './utilities/player';
 import { exec as execQueue } from './utilities/queue';
 import { exec as execSonos } from './utilities/sonos';
@@ -38,9 +37,14 @@ export default function App() {
   const [index, setIndex] = useLocalStorage('larkIndex', 0);
   const [devices, setDevices] = useLocalStorage('larkDevices', {});
   const [output, setOutput] = useLocalStorage('larkOutput', false);
-  const [song, setSong] = useLocalStorage('larkSong', null);
-  const [playing, setPlaying] = useState(false);
+  const [playing, setPlaying] = useLocalStorage('larkPlaying', false);
+  const [time, setTime] = useLocalStorage('larkTime', false);
   const [volume, setVolume] = useState(20);
+  const interval = playing ? 1000 : null;
+
+  useInterval(() => {
+    exec(getTime());
+  }, interval);
 
   useEffect(() => {
     console.log(`Starting '${process.env.NODE_ENV}' with host '${process.env.API_HOST}'`);
@@ -52,10 +56,11 @@ export default function App() {
     });
   }, [setArtists, setDevices, setEntries, setOutput]);
 
-  function changeOutput(device) {
-    //??? store last device playing
+  async function changeOutput(device) {
+    //??? stop last device playing
     setOutput(device);
-    exec(syncQueue(), device);
+    await exec(syncQueue(), device);
+    await exec(setVol(volume));
   }
 
   async function exec(action, device = output) {
@@ -74,19 +79,22 @@ export default function App() {
   function update(result) {
     const keys = Object.keys(result);
     for (const key of keys) {
-      if (key === 'song') {
-        console.log(`__song__(${result.song})`);
-        setSong(result.song);
-      } else if (key === 'index') {
+      if (key === 'index') {
         console.log(`__index__(${result.index})`);
         setIndex(result.index);
       } else if (key === 'playing') {
         console.log(`__playing__(${result.playing})`);
         setPlaying(result.playing);
       } else if (key === 'queue') {
+        const length = result.queue.length;
+        if (index >= length) {
+          setIndex(length - 1);
+        }
         setQueue(result.queue);
       } else if (key === 'sonosQueue') {
         console.log(`__sonosQueue__(${result.sonosQueue?.length})`);
+      } else if (key === 'time') {
+        setTime(result.time);
       } else if (key === 'volume') {
         setVolume(result.volume);
       }
@@ -102,8 +110,8 @@ export default function App() {
         queue={queue}
         index={index}
         playing={playing}
+        time={time}
         output={output}
-        song={song}
         volume={volume}
         exec={exec}
         changeOutput={changeOutput}

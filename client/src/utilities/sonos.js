@@ -8,7 +8,7 @@ export async function exec(cmds, device) {
   };
 
   const result = await post(data);
-  await console.log(`SONOS (${device?.name})`, data.cmds.map(cmd => cmd.type));
+  //??? remove console.log(`SONOS (${device?.name})`, data.cmds.map(cmd => cmd.type));
 
   if (result.sonosQueue) {
     result.sonosQueue = convertQueue(result.sonosQueue);
@@ -21,6 +21,7 @@ function convertCommand(cmd) {
   switch (cmd.type) {
     case 'add':
       return convertAdd(cmd);
+    case 'getTime':
     case 'pause':
     case 'play':
     case 'remove':

@@ -27,9 +27,9 @@ export default function Album({ guid, entries, exec, setContent }) {
 
     return (
       <div className={styles.song} onClick={() => exec(queueSong(song, -1, true))}>
-        <button className='button'>Play</button>
+        <button className='btn'>Play</button>
         <div className={styles.title}>{song.title}</div>
-        <Link href={`/songs/${song.guid}`} className='button'>Info</Link>
+        <Link href={`/songs/${song.guid}`} className='btn'>Info</Link>
       </div>
     );
   }

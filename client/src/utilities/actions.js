@@ -11,6 +11,12 @@ export function clearQueue() {
   };
 }
 
+export function getTime() {
+  return {
+    type: 'getTime',
+  };
+}
+
 export function queueSong(song, index = -1, play) {
   return {
     type: 'queueSong',
@@ -20,10 +26,10 @@ export function queueSong(song, index = -1, play) {
   };
 }
 
-export function setVolume(value) {
+export function setVolume(volume) {
   return {
     type: 'setVolume',
-    value,
+    volume,
   };
 }
 

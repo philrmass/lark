@@ -19,8 +19,8 @@ export default function Home({
   queue,
   index,
   playing,
+  time,
   output,
-  song,
   volume,
   exec,
   changeOutput,
@@ -46,9 +46,11 @@ export default function Home({
     <>
       <div className={styles.fixed}>
         <Player
-          song={song}
+          queue={queue}
+          index={index}
           playing={playing}
           volume={volume}
+          time={time}
           exec={exec}
         />
 

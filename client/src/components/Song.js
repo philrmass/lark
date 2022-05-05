@@ -57,9 +57,9 @@ export default function Song({ guid, entries, exec, setContent }) {
   return (
     <div className={styles.main}>
       <div className={styles.buttons}>
-        <button className='button' onClick={() => queueAt(0)}>Now</button>
-        <button className='button' onClick={() => queueAt(1)}>Next</button>
-        <button className='button' onClick={() => queueAt(-1)}>Append</button>
+        <button className='btn' onClick={() => queueAt(0)}>Now</button>
+        <button className='btn' onClick={() => queueAt(1)}>Next</button>
+        <button className='btn' onClick={() => queueAt(-1)}>Append</button>
         <label>
           <input type='checkbox' checked={play} />
           <span className={styles.label}>Play</span>

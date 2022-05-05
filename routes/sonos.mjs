@@ -71,6 +71,8 @@ function action(cmd, device) {
   switch (cmd.type) {
     case 'add':
       return add(cmd, device);
+    case 'getTime':
+      return getTime(cmd, device);
     case 'pause':
       return pause(cmd, device);
     case 'play':
@@ -94,6 +96,10 @@ async function add(cmd, device) {
 
   console.log(`add' '...${url.slice(-50)}' at ${index}`);
   return { sonosQueue: true };
+}
+
+function getTime() {
+  return { time: true };
 }
 
 async function pause(cmd, device) {
@@ -148,8 +154,6 @@ async function getStatus(toSend, device) {
   const keys = Object.keys(toSend);
   const values = await Promise.all(keys.map(async (key) => {
     if (key === 'volume') {
-      const current = await device.currentTrack();
-      console.log('CURR', current);
       return await device.getVolume();
     } else if (key === 'playing') {
       const state = await device.getCurrentState();
@@ -161,6 +165,9 @@ async function getStatus(toSend, device) {
       const queue = await device.getQueue();
       const items = queue.items ?? [];
       return items.map(item => ({ url: item.uri }));
+    } else if (key === 'time') {
+      const current = await device.currentTrack();
+      return current.position;
     }
   }));
 

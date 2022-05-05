@@ -1,13 +1,8 @@
 .main {
+  display: grid;
+  grid-template-columns: max-content 1fr max-content;
   padding: var(--size2);
   background: var(--bg-lt-gray);
-}
-
-.volume {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #def;
 }
 
 .controls {
@@ -17,14 +12,50 @@
   align-items: center;
 }
 
-.time {
+.buttons {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #def;
 }
 
 .title {
   padding: var(--size1);
   font-size: var(--text-med);
+}
+
+.volume {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 var(--size1);
+}
+
+.volumeValue {
+  position: relative;
+  bottom: 10px;
+}
+
+.time {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 var(--size1);
+}
+
+.timeValue {
+  position: relative;
+  top: 10px;
+}
+
+.barWrap {
+  height: 6px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin: 0 var(--size0);
+  background: var(--bg-white);
+  border: 1px solid var(--color);
+}
+
+.bar {
+  height: 100%;
+  background: var(--color);
 }
