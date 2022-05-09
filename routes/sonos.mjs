@@ -99,7 +99,7 @@ async function add(cmd, device) {
 }
 
 function getTime() {
-  return { time: true };
+  return { index: true, time: true };
 }
 
 async function pause(cmd, device) {

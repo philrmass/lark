@@ -1,20 +1,3 @@
-//??? change getTime to setStatus, return time and index
-//??? fix time value display, move below
-//??? connect next and prev buttons -> set index if available
-//??? set volume before play?
-
-//??? deploy to server
-
-//??? add by-letter quick scroll on right-side
-//??? add volume bar
-//??? add time bar
-
-//??? add search
-//??? add duration to album data
-//??? add release date and duration display
-//??? add art to album display
-
-//??? add spinner during nexwork calls
 import { useEffect, useRef, useState } from 'preact/hooks';
 
 import { getTime, setVolume as setVol, syncQueue } from './utilities/actions';
@@ -80,7 +63,6 @@ export default function App() {
     const keys = Object.keys(result);
     for (const key of keys) {
       if (key === 'index') {
-        console.log(`__index__(${result.index})`);
         setIndex(result.index);
       } else if (key === 'playing') {
         console.log(`__playing__(${result.playing})`);

@@ -1,19 +1,14 @@
 .main {
-  display: grid;
-  grid-template-columns: max-content 1fr max-content;
   padding: var(--size2);
   background: var(--bg-lt-gray);
+  gap: var(--size1);
 }
 
 .controls {
-  margin: 4px 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-.buttons {
-  display: flex;
+  margin: var(--size2) 0;
 }
 
 .title {
@@ -21,28 +16,17 @@
   font-size: var(--text-med);
 }
 
-.volume {
+.row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 var(--size1);
 }
 
-.volumeValue {
-  position: relative;
-  bottom: 10px;
-}
-
-.time {
+.times {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 0 var(--size1);
-}
-
-.timeValue {
-  position: relative;
-  top: 10px;
+  gap: var(--size1);
+  margin-top: 4px;
 }
 
 .barWrap {
