@@ -1,4 +1,4 @@
-import { adjustVolume, togglePlay } from '../utilities/actions';
+import { adjustVolume, next, previous, togglePlay } from '../utilities/actions';
 import { toTime } from '../utilities/display';
 import styles from './Player.module.css';
 
@@ -32,29 +32,23 @@ export default function Player({
         </button>
       </div>
       <div className={styles.controls}>
-        <div>
-          <button className='btn'>
+        <div className={styles.buttons}>
+          <button className='btn' onClick={() => exec(previous())}>
             {'|<'}
           </button>
           <button className='btn' onClick={() => exec(togglePlay())}>
             {playing ? '||' : '>'}
           </button>
         </div>
-      <div className={styles.title}>{song?.title ?? ''}</div>
-        <button className='btn'>
+        <div className={styles.title}>{song?.title ?? ''}</div>
+        <button className='btn' onClick={() => exec(next())}>
           {'>|'}
         </button>
       </div>
       <div className={styles.row}>
-        <button className='btn-sm'>
-          -
-        </button>
         <div className={styles.barWrap}>
           <div className={styles.bar} style={timeStyle} />
         </div>
-        <button className='btn-sm'>
-          +
-        </button>
       </div>
       <div className={styles.times}>
         <span>{timeStr}</span>

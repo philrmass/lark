@@ -35,9 +35,8 @@ async function findSongFiles(path) {
       const items = await fs.readdir(path);
       const paths = items.map(item => jsPath.join(path, item));
       return (await Promise.all(paths.map(path => findSongFiles(path)))).flat();
-    } else {
-      return [];
     }
+    return [];
   } catch (err) {
     console.error(`findSongs [${err}]`);
     return [];
@@ -90,7 +89,7 @@ export function parseArtists(songsByGuid) {
           artist: artist.name,
           title: song.album,
           guid: calcGuid(`${artist.name}/${song.album}`),
-          songs: []
+          songs: [],
         };
       }
       albums[song.album].songs.push(song);
@@ -108,6 +107,10 @@ export function parseArtists(songsByGuid) {
         }
         return a.songIndex - b.songIndex;
       });
+      album.duration = album.songs.reduce((duration, song) => {
+        const songDuration = song.duration ?? 0;
+        return duration + songDuration;
+      }, 0);
       return album;
     });
 

@@ -1,3 +1,10 @@
+export function adjustTime(inc) {
+  return {
+    type: 'adjustTime',
+    inc,
+  };
+}
+
 export function adjustVolume(inc) {
   return {
     type: 'adjustVolume',
@@ -17,12 +24,31 @@ export function getTime() {
   };
 }
 
+export function next() {
+  return {
+    type: 'next',
+  };
+}
+
+export function previous() {
+  return {
+    type: 'previous',
+  };
+}
+
 export function queueSong(song, index = -1, play) {
   return {
     type: 'queueSong',
     song: { ...song },
     index,
     play,
+  };
+}
+
+export function setTime(volume) {
+  return {
+    type: 'setTime',
+    volume,
   };
 }
 

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 
-import { getTime, setVolume as setVol, syncQueue } from './utilities/actions';
+import { getTime, syncQueue } from './utilities/actions';
 import { translateAction } from './utilities/commands';
 import { useInterval } from './utilities/hooks';
 import { exec as execPlayer } from './utilities/player';
@@ -40,14 +40,13 @@ export default function App() {
   }, [setArtists, setDevices, setEntries, setOutput]);
 
   async function changeOutput(device) {
-    //??? stop last device playing
     setOutput(device);
     await exec(syncQueue(), device);
-    await exec(setVol(volume));
+    await exec(getTime());
   }
 
   async function exec(action, device = output) {
-    const state = { index, playing, queue, volume };
+    const state = { index, playing, queue, time, volume };
     const cmds = translateAction(action, state);
 
     update(execQueue(cmds, queue));
@@ -65,7 +64,6 @@ export default function App() {
       if (key === 'index') {
         setIndex(result.index);
       } else if (key === 'playing') {
-        console.log(`__playing__(${result.playing})`);
         setPlaying(result.playing);
       } else if (key === 'queue') {
         const length = result.queue.length;

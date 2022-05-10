@@ -11,9 +11,17 @@
   margin: var(--size2) 0;
 }
 
+.buttons {
+  flex-shrink: 0;
+}
+
 .title {
+  flex-grow: 1;
   padding: var(--size1);
   font-size: var(--text-med);
+  text-overflow: ellipsis;
+  white-space: pre;
+  overflow: hidden;
 }
 
 .row {

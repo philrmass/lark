@@ -6,11 +6,22 @@
   user-select: none;
 }
 
+.output {
+  flex-shrink: 0;
+}
+
 .status {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  overflow: hidden;
+}
+
+.next {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: pre;
 }
 
 .numbers {

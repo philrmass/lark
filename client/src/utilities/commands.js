@@ -1,17 +1,21 @@
-// ??? functions to add
-// - getStatus [on device choose]
-// - remove (index)
-
 export function translateAction(action, state) {
   switch (action.type) {
+    case 'adjustTime':
+      return adjustTime(action, state);
     case 'adjustVolume':
       return adjustVolume(action, state);
     case 'clearQueue':
       return clearQueue(action, state);
     case 'getTime':
       return getTime(action, state);
+    case 'next':
+      return next(action, state);
+    case 'previous':
+      return previous(action, state);
     case 'queueSong':
       return queueSong(action, state);
+    case 'setTime':
+      return setTime(action, state);
     case 'setVolume':
       return setVolume(action, state);
     case 'syncQueue':
@@ -22,6 +26,12 @@ export function translateAction(action, state) {
       console.warn(`Unknown action '${action.type}'`);
       return [];
   }
+}
+
+function adjustTime(action, state) {
+  const time = state.time + action.inc;
+
+  return [{ type: 'setTime', time }];
 }
 
 function adjustVolume(action, state) {
@@ -38,6 +48,28 @@ function getTime() {
   return [{ type: 'getTime' }];
 }
 
+function next(_action, state) {
+  const index = state.index + 1;
+
+  if (index < state.queue.length) {
+    return [{ type: 'select', index }];
+  }
+
+  return [];
+}
+
+function previous(_action, state) {
+  const index = state.index - 1;
+
+  if (state.time > 0) {
+    return [{ type: 'setTime', time: 0 }];
+  } else if (index >= 0) {
+    return [{ type: 'select', index }];
+  }
+
+  return [];
+}
+
 function queueSong(action, state) {
   let index = state.queue.length;
 
@@ -51,10 +83,15 @@ function queueSong(action, state) {
 
   if (action.play && !state.playing) {
     cmds.push({ type: 'select', index });
+    cmds.push({ type: 'setVolume', volume: state.volume });
     cmds.push({ type: 'play' });
   }
 
   return cmds;
+}
+
+function setTime(action) {
+  return [{ type: 'setTime', time: action.time }];
 }
 
 function setVolume(action) {
@@ -78,5 +115,5 @@ function togglePlay(action, state) {
     return [{ type: 'pause' }];
   }
 
-  return [{ type: 'play' }];
+  return [{ type: 'setVolume', volume: state.volume }, { type: 'play' }];
 }

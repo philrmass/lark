@@ -2,6 +2,10 @@
   padding: 0 var(--size2) var(--size2) var(--size2);
 }
 
+.data {
+  padding-bottom: var(--size1);
+}
+
 .song {
   display: flex;
   align-items: center;

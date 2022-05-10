@@ -81,6 +81,8 @@ function action(cmd, device) {
       return remove(cmd, device);
     case 'select':
       return select(cmd, device);
+    case 'setTime':
+      return setTime(cmd, device);
     case 'setVolume':
       return setVolume(cmd, device);
     default:
@@ -99,7 +101,7 @@ async function add(cmd, device) {
 }
 
 function getTime() {
-  return { index: true, time: true };
+  return { index: true, playing: true, time: true };
 }
 
 async function pause(cmd, device) {
@@ -117,7 +119,6 @@ async function play(cmd, device) {
 }
 
 async function remove(cmd, device) {
-  console.log(`REM (${cmd.index}) ${Number.isInteger(cmd.index)}`);
   if (cmd.all) {
     await device.flush();
     console.log('remove all');
@@ -131,7 +132,6 @@ async function remove(cmd, device) {
 }
 
 async function select(cmd, device) {
-  console.log(`SEL (${cmd.index}) ${Number.isInteger(cmd.index)}`);
   if (Number.isInteger(cmd.index)) {
     const index = cmd.index + 1;
     await device.selectTrack(index);
@@ -141,6 +141,13 @@ async function select(cmd, device) {
 
     return { index: true };
   }
+}
+
+async function setTime(cmd, device) {
+  await device.seek(cmd.time);
+  console.log(`setTime (${cmd.time})`);
+
+  return { index: true, playing: true, time: true };
 }
 
 async function setVolume(cmd, device) {
@@ -178,7 +185,6 @@ async function getStatus(toSend, device) {
 }
 
 // ??? unused commands
-//seek(seconds);
 //getAllGroups();
 //joinGroup(otherDeviceName)
 //leaveGroup()

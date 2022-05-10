@@ -26,10 +26,11 @@ function convertCommand(cmd) {
     case 'play':
     case 'remove':
     case 'select':
+    case 'setTime':
     case 'setVolume':
       return cmd;
     default:
-      console.warn(`Unknown command [${cmd.type}]`);
+      console.warn(`Unknown sonos command [${cmd.type}]`);
       return null;
   }
 }

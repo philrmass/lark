@@ -20,10 +20,15 @@ function parseAlbumEntries(albums, artist) {
     const albumEntry = {
       artist: artist.name,
       artistGuid: artist.guid,
+      date: album.date,
+      duration: album.duration,
       type: 'album',
       title: album.title,
       songGuids: album.songs.map(song => song.guid),
     };
+    if (albumEntry.date) {
+      console.log('AE', albumEntry.title, albumEntry.date);
+    }
     const songEntries = parseSongEntries(album.songs, album, artist);
 
     return {

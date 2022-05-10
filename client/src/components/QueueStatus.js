@@ -23,7 +23,9 @@ export default function QueueStatus({
         <Output devices={devices} output={output} changeOutput={changeOutput} />
       </div>
       <div className={styles.status} onClick={toggleQueue}>
-        <div>{`Next: ${queue[index + 1]?.title ?? ''}`}</div>
+        <div className={styles.next}>
+          {`Next: ${queue[index + 1]?.title ?? ''}`}
+        </div>
         <div className={styles.numbers}>
           <div>{`${queue.length} songs`}</div>
           <div>{buildDuration()}</div>

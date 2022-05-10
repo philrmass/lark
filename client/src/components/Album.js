@@ -3,6 +3,7 @@ import { route } from 'preact-router';
 import { Link } from 'preact-router/match';
 
 import { queueSong } from '../utilities/actions';
+import { toTime } from '../utilities/display';
 import styles from './Album.module.css';
 
 export default function Album({ guid, entries, exec, setContent }) {
@@ -22,6 +23,10 @@ export default function Album({ guid, entries, exec, setContent }) {
     route('/', true);
   }
 
+  if (album.date) {
+    console.log('ALBUM-DATE', album.date);
+  }
+
   function buildSong(guid) {
     const song = entries[guid];
 
@@ -36,6 +41,9 @@ export default function Album({ guid, entries, exec, setContent }) {
 
   return (
     <div className={styles.main}>
+      <div className={styles.data}>
+        <span>{toTime(album.duration)}</span>
+      </div>
       {album.songGuids.map(guid => buildSong(guid))}
     </div>
   );

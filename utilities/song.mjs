@@ -82,8 +82,8 @@ function getDate(metadata) {
     return metadata.TDRC;
   }
   if (metadata.TYER && metadata.TDAT) {
-    let day = metadata.TDAT.slice(0, 2);
-    let month = metadata.TDAT.slice(2, 4);
+    const day = metadata.TDAT.slice(0, 2);
+    const month = metadata.TDAT.slice(2, 4);
     return `${metadata.TYER}-${month}-${day}`;
   } else if (metadata.TYER) {
     return `${metadata.TYER}-xx-xx`;

@@ -16,28 +16,25 @@ export default function Queue ({
 
   function buildSong(song, iSong) {
     const isCurrent = iSong === index;
-    
+
     return (
-      <div key={`${iSong}-${song.guid}`} className={styles.song}>
+      <>
         <span className={styles.status}>
           {isCurrent ? (playing ? '~' : '-') : ''}
         </span>
-        {song.title}
         <span className={styles.duration}>
           {toTime(song.duration)}
         </span>
-      </div>
+        <span className={styles.title}>
+          {song.title}
+        </span>
+      </>
     );
   }
 
   return (
-    <div className={styles.main}>
-      <div className={styles.songs}>
-        {queue.map((song, index) => buildSong(song, index))}
-      </div>
-      <div className={styles.buttons}>
-        <button className='button' onClick={toggleQueue}>Back</button>
-      </div>
+    <div className={styles.main} onClick={toggleQueue}>
+      {queue.map((song, index) => buildSong(song, index))}
     </div>
   );
 }
