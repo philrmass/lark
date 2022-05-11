@@ -10,7 +10,7 @@ export default function Player({
   time,
   exec,
 }) {
-  const song = queue?.at(index);
+  const song = queue[index];
   const volumeStyle = { width: `${volume}%` };
   const duration = song?.duration ?? 1;
   const timePercent = 100 * (time / duration);
