@@ -14,6 +14,7 @@ export default function Queue ({
     setContent(null);
   }, [setContent]);
 
+  console.log('QUEUE', queue);
   function buildSong(song, iSong) {
     const isCurrent = iSong === index;
 

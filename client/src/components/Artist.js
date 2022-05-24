@@ -2,9 +2,10 @@ import { useEffect } from 'react';
 import { route } from 'preact-router';
 import { Link } from 'preact-router/match';
 
+import { queueSongs } from '../utilities/actions';
 import styles from './Artist.module.css';
 
-export default function Artist({ guid, entries, setContent }) {
+export default function Artist({ guid, entries, exec, setContent }) {
   const artist = entries[guid];
 
   useEffect(() => {
@@ -12,6 +13,13 @@ export default function Artist({ guid, entries, setContent }) {
       setContent(artist);
     }
   }, [artist, setContent]);
+
+  function onClick(e, album) {
+    e.preventDefault();
+    e.stopPropagation();
+    const songs = album.songGuids.map(guid => entries[guid]);
+    exec(queueSongs(songs, -1, true));
+  }
 
   if (!artist) {
     return <div>Loading...</div>;
@@ -27,7 +35,10 @@ export default function Artist({ guid, entries, setContent }) {
     return (
       <Link href={`/albums/${guid}`}>
         <div className={styles.album}>
-          {album.title}
+          <button className='btn' onClick={(e) => onClick(e, album)}>
+            Play
+          </button>
+          <div className={styles.title}>{album.title}</div>
         </div>
       </Link>
     );

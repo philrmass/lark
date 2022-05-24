@@ -14,6 +14,8 @@ export function translateAction(action, state) {
       return previous(action, state);
     case 'queueSong':
       return queueSong(action, state);
+    case 'queueSongs':
+      return queueSongs(action, state);
     case 'setTime':
       return setTime(action, state);
     case 'setVolume':
@@ -83,6 +85,30 @@ function queueSong(action, state) {
 
   if (action.play && !state.playing) {
     cmds.push({ type: 'select', index });
+    cmds.push({ type: 'setVolume', volume: state.volume });
+    cmds.push({ type: 'play' });
+  }
+
+  return cmds;
+}
+
+function queueSongs(action, state) {
+  let baseIndex = state.queue.length;
+
+  if (action.index === 0) {
+    baseIndex = state.index;
+  } else if (action.index === 1) {
+    baseIndex = state.index + 1;
+  }
+
+  const cmds = action.songs.map((song, index) => ({
+    type: 'add',
+    song,
+    index: baseIndex + index,
+  }));
+
+  if (action.play && !state.playing) {
+    cmds.push({ type: 'select', index: baseIndex });
     cmds.push({ type: 'setVolume', volume: state.volume });
     cmds.push({ type: 'play' });
   }

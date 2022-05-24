@@ -36,6 +36,15 @@ export function previous() {
   };
 }
 
+export function queueSongs(songs, index = -1, play) {
+  return {
+    type: 'queueSongs',
+    songs: [ ...songs ],
+    index,
+    play,
+  };
+}
+
 export function queueSong(song, index = -1, play) {
   return {
     type: 'queueSong',

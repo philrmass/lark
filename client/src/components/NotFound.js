@@ -1,6 +1,5 @@
 import { Link } from 'preact-router/match';
 
-//??? remove NotFound, redirect to Artists instead
 export default function NotFound({ url }) {
   return (
     <>

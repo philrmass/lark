@@ -26,11 +26,11 @@ yarn dev
 ```
 
 ### Improvements
-#### To Finish
-- Deloy to server
+- If queue empty, redirect to Artists
+- Remove NotFound, redirect to Artists instead
 - Stop last device playing
+- Show server errors in app bottom right corner, red dot, clear
 - Figure out how to take over TV, other non-play issues
-#### After Finish
 - Add by-letter quick scroll on right-side of artists
 - Add search (artist, album, and song)
 - Add groups to output

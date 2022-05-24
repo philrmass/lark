@@ -68,7 +68,7 @@ export default function Home({
       <div className={styles.content}>
         <Router>
           <Artists path='/' artists={artists} setContent={setContent} />
-          <Artist path='/artists/:guid' entries={entries} setContent={setContent} />
+          <Artist path='/artists/:guid' entries={entries} exec={exec} setContent={setContent} />
           <Album path='/albums/:guid' entries={entries} exec={exec} setContent={setContent} />
           <Queue
             path='/queue'
