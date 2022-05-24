@@ -20,6 +20,12 @@ yarn start [PATH-1] [PATH-N]
 ```
 *Paths will be added to the library and scanned for music files*
 
+#### Run via ssh and logout
+```
+nohup yarn start &
+disown
+```
+
 #### Run the development client at `localhost:8080`
 ```
 yarn dev
