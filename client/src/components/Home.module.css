@@ -2,3 +2,10 @@
   position: sticky;
   top: 0;
 }
+
+.version {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 16px;
+  color: var(--text-lt);
+}

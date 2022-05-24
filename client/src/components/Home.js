@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Router, { route } from 'preact-router';
 
-import styles from './Home.module.css';
+import { version } from '../../package.json';
 import Album from './Album';
 import Artist from './Artist';
 import Artists from './Artists';
@@ -11,6 +11,7 @@ import Player from './Player';
 import Queue from './Queue';
 import QueueStatus from './QueueStatus';
 import Song from './Song';
+import styles from './Home.module.css';
 
 export default function Home({
   artists,
@@ -81,6 +82,7 @@ export default function Home({
           <Song path='/songs/:guid' entries={entries} exec={exec} setContent={setContent} />
           <NotFound default />
         </Router>
+        <div className={styles.version}>{`v${version}`}</div>
       </div>
     </>
   );
