@@ -18,6 +18,11 @@ yarn build
 ```
 yarn start [PATH-1] [PATH-N]
 ```
+##### To run in the background over SSH
+```
+nohup yarn start &
+```
+
 *Paths will be added to the library and scanned for music files*
 
 #### Run the development client at `localhost:8080`
