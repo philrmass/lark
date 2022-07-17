@@ -32,9 +32,10 @@ yarn dev
 ```
 
 ### Improvements
-- If queue empty, redirect to Artists
+- Solve problem of too large local storage (local forage?)
+- If queue empty, display a message
 - Remove NotFound, redirect to Artists instead
-- Stop last device playing
+- Stop playing before switching devices
 - Show server errors in app bottom right corner, red dot, clear
 - Figure out how to take over TV, other non-play issues
 - Add by-letter quick scroll on right-side of artists
